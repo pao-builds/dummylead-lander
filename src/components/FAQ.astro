@@ -1,0 +1,58 @@
+---
+import { FAQS } from '../data/content';
+import SectionHeader from './SectionHeader.astro';
+
+// Static, always-visible Q&A. No JS and no collapse: the full text stays in the
+// DOM so search engines and LLMs read every answer, and the FAQPage structured
+// data on the homepage is built from this same FAQS array (index.astro).
+---
+
+<section id="faq" class="section">
+  <div class="shell">
+    <SectionHeader eyebrow="Questions" title="Common questions">
+      The short version of what people ask before they run their first seed lead.
+    </SectionHeader>
+
+    <dl class="faq">
+      {
+        FAQS.map((item) => (
+          <div class="faq-item panel panel-pad">
+            <dt class="faq-q">{item.q}</dt>
+            <dd class="faq-a">{item.a}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .faq {
+    margin: clamp(28px, 4vw, 44px) 0 0;
+    display: grid;
+    gap: 14px;
+  }
+  .faq-item {
+    margin: 0;
+  }
+  .faq-q {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: var(--color-bone);
+  }
+  .faq-a {
+    margin: 12px 0 0;
+    color: var(--color-bone-dim);
+    line-height: 1.65;
+    font-size: 0.98rem;
+    max-width: 70ch;
+  }
+
+  @media (min-width: 880px) {
+    .faq {
+      gap: 16px;
+    }
+  }
+</style>

@@ -1,0 +1,744 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+// Left-column explainer icons (stroke uses currentColor so the chip tints them).
+const sigIcons = {
+  attestation:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.2 2.9 8.1 7 9 4.1-.9 7-4.8 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+  cnam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.6 1.8-2.4 3-2.4s2.4.8 3 2.4"/><path d="M14.5 10h4M14.5 13h3"/></svg>',
+  spam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+};
+
+// Small status-bar glyphs reused inside the phone.
+const bars =
+  '<svg viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>';
+const wifi =
+  '<svg viewBox="0 0 15 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3.6a9 9 0 0 1 13 0"/><path d="M3.6 6.2a5.4 5.4 0 0 1 7.8 0"/><circle cx="7.5" cy="9" r="1" fill="currentColor" stroke="none"/></svg>';
+const batt =
+  '<svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="20" height="11" rx="3"/><rect x="2" y="2" width="13" height="8" rx="1.5" fill="currentColor" stroke="none"/><rect x="21.4" y="3.6" width="1.6" height="4.8" rx="0.8" fill="currentColor" stroke="none"/></svg>';
+---
+
+<section id="reputation" class="section">
+  <div class="shell rep-grid">
+    <div class="rep-copy">
+      <SectionHeader
+        eyebrow="Caller reputation"
+        title="Find out how your calls really show up"
+      >
+        Every call that reaches a dummy lead gets inspected the way the carrier
+        does. You see the attestation grade it carried, the caller ID it showed,
+        and whether it arrived flagged as spam, before weak pickup quietly costs
+        you deals.
+      </SectionHeader>
+
+      <ul class="rep-signals">
+        <li class="rep-signal">
+          <span class="rsig-icon" aria-hidden="true" set:html={sigIcons.attestation} />
+          <div>
+            <p class="rsig-term">
+              Attestation <span class="rsig-tag">SHAKEN/STIR</span>
+            </p>
+            <p class="rsig-text">
+              When you call, your phone carrier can vouch that the number on the
+              screen is really yours. That vote of confidence is graded A (fully
+              trusted) down to C (not vouched for at all), and a low grade is
+              what makes phones quietly bury your call. We show you the grade
+              every call carried.
+            </p>
+          </div>
+        </li>
+        <li class="rep-signal">
+          <span class="rsig-icon" aria-hidden="true" set:html={sigIcons.cnam} />
+          <div>
+            <p class="rsig-term">Caller ID <span class="rsig-tag">CNAM</span></p>
+            <p class="rsig-text">
+              This is the name that pops up next to your number when you call.
+              It can show your business name, just the bare digits, or nothing
+              at all, and that alone often decides whether someone picks up. We
+              show you exactly what the lead saw.
+            </p>
+          </div>
+        </li>
+        <li class="rep-signal">
+          <span class="rsig-icon" aria-hidden="true" set:html={sigIcons.spam} />
+          <div>
+            <p class="rsig-term">Spam label</p>
+            <p class="rsig-text">
+              Phone networks can tag a call “Spam Likely” or “Scam Likely”
+              before it ever rings, just from how the number has been behaving.
+              One tag and almost no one answers. We catch it the moment it
+              happens to you.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rep-stage">
+      <div class="rep-aura" aria-hidden="true"></div>
+
+      <!-- Auto-cycling incoming-call screen. Content + theme are swapped by the
+           <script> as the GSAP timeline steps through scenarios. -->
+      <div class="rep-phone" data-call>
+        <span class="rep-speaker" aria-hidden="true"></span>
+        <div class="rep-screen theme-flag" data-screen>
+          <span class="rep-glitch" data-flash aria-hidden="true"></span>
+
+          <div class="rep-statusbar" aria-hidden="true">
+            <span class="rep-time">9:41</span>
+            <span class="rep-sysicons">
+              <Fragment set:html={bars} />
+              <Fragment set:html={wifi} />
+              <Fragment set:html={batt} />
+            </span>
+          </div>
+
+          <p class="rep-incoming">Incoming call</p>
+
+          <div class="rep-avatar" data-avatar>
+            <span class="rep-ring" aria-hidden="true"></span>
+            <span class="rep-ring rep-ring-2" aria-hidden="true"></span>
+            <span class="rep-initials" data-initials>!</span>
+          </div>
+
+          <div class="rep-caller" data-caller>
+            <span class="rep-name" data-name>Spam Likely</span>
+            <span class="rep-sub" data-sub>+1 (628) 555-0114</span>
+          </div>
+
+          <div class="rep-badge" data-badge>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.2 2.9 8.1 7 9 4.1-.9 7-4.8 7-9V6z"/></svg>
+            <span>Grade <b class="rep-grade" data-grade>C</b></span>
+            <span class="rep-dot-sep">·</span>
+            <span class="rep-word" data-word>Unsigned</span>
+          </div>
+
+          <div class="rep-banner" data-banner>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            Flagged as spam
+          </div>
+
+          <p class="rep-verdict" data-verdict>
+            <span class="rep-verdict-dot" aria-hidden="true"></span>
+            <span data-verdict-text>Sent to voicemail</span>
+          </p>
+
+          <div class="rep-actions" aria-hidden="true">
+            <span class="rep-act rep-act-decline">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15.46l-5.27-.61-2.52 2.52a15.05 15.05 0 0 1-6.59-6.59l2.53-2.53L8.54 3H3.03C2.45 13.18 10.82 21.55 21 20.97v-5.51z"/></svg>
+            </span>
+            <span class="rep-act rep-act-accept">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.4 11.4 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2z"/></svg>
+            </span>
+          </div>
+
+          <span class="rep-home" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rep-grid {
+    display: grid;
+    gap: clamp(36px, 5vw, 68px);
+    align-items: center;
+  }
+  @media (min-width: 920px) {
+    .rep-grid {
+      grid-template-columns: 1fr minmax(300px, 360px);
+    }
+  }
+
+  /* ---- left: explainer signals ---- */
+  .rep-signals {
+    list-style: none;
+    margin: clamp(26px, 3vw, 34px) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+  }
+  .rep-signal {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
+    align-items: start;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-line);
+  }
+  .rep-signal:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .rsig-icon {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius);
+    color: var(--color-signal-deep);
+    background: color-mix(in oklab, var(--color-signal) 8%, var(--color-surface));
+    border: 1px solid color-mix(in oklab, var(--color-signal) 22%, var(--color-line));
+  }
+  .rsig-icon :global(svg) {
+    width: 21px;
+    height: 21px;
+  }
+  .rsig-term {
+    margin: 2px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--color-bone);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .rsig-tag {
+    font-family: var(--font-code);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: 2px 7px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line-strong);
+  }
+  .rsig-text {
+    margin: 6px 0 0;
+    color: var(--color-bone-dim);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  /* ---- right: phone stage ---- */
+  .rep-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: clamp(16px, 3vw, 32px) 0;
+  }
+  .rep-aura {
+    position: absolute;
+    width: min(440px, 96%);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--color-signal) 14%, transparent),
+      transparent 64%
+    );
+    z-index: 0;
+  }
+
+  .rep-phone {
+    position: relative;
+    z-index: 1;
+    width: min(320px, 84vw);
+    background: linear-gradient(180deg, #1a2740, #0a1528);
+    border-radius: 44px;
+    padding: 13px;
+    box-shadow:
+      var(--shadow-lg),
+      inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+  }
+  .rep-speaker {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 78px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    z-index: 3;
+  }
+
+  /* the screen carries the per-scenario accent via --acc */
+  .rep-screen {
+    --acc: var(--color-flag);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(
+        120% 80% at 50% -10%,
+        color-mix(in oklab, var(--acc) 30%, #0a1528),
+        #0a1528 60%
+      ),
+      #0a1528;
+    border-radius: 32px;
+    padding: 38px 18px 20px;
+    min-height: 488px;
+    transition: background 0.6s ease;
+  }
+  /* full-screen tint flash (spam slam) */
+  .rep-glitch {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in oklab, var(--color-flag) 55%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .rep-screen.theme-flag {
+    --acc: var(--color-flag);
+  }
+  .rep-screen.theme-amber {
+    --acc: var(--color-amber);
+  }
+  .rep-screen.theme-trust {
+    --acc: var(--color-trust);
+  }
+
+  .rep-statusbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.82);
+  }
+  .rep-sysicons {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .rep-sysicons :global(svg) {
+    height: 11px;
+    width: auto;
+    display: block;
+  }
+
+  .rep-incoming {
+    margin: 20px 0 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .rep-avatar {
+    position: relative;
+    width: 82px;
+    height: 82px;
+    margin: 16px auto 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: color-mix(in oklab, var(--acc) 22%, #0a1528);
+    border: 1px solid color-mix(in oklab, var(--acc) 50%, transparent);
+    color: var(--acc);
+    transition:
+      background 0.5s ease,
+      border-color 0.5s ease,
+      color 0.5s ease;
+  }
+  .rep-initials {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+  .rep-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--acc);
+    opacity: 0;
+    animation: rep-ring 2.2s ease-out infinite;
+  }
+  .rep-ring-2 {
+    animation-delay: 1.1s;
+  }
+  @keyframes rep-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .rep-caller {
+    margin-top: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .rep-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #fff;
+    min-height: 1.5em;
+  }
+  .rep-screen.theme-flag .rep-name {
+    color: var(--color-flag);
+  }
+  .rep-sub {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .rep-badge {
+    align-self: center;
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--acc) 16%, transparent);
+    border: 1px solid color-mix(in oklab, var(--acc) 48%, transparent);
+    color: var(--acc);
+    font-family: var(--font-code);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .rep-badge svg {
+    width: 15px;
+    height: 15px;
+  }
+  .rep-grade {
+    font-weight: 700;
+  }
+  .rep-dot-sep {
+    opacity: 0.5;
+  }
+
+  .rep-banner {
+    align-self: center;
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    border-radius: 13px;
+    background: linear-gradient(
+      180deg,
+      var(--color-flag),
+      color-mix(in oklab, var(--color-flag) 78%, #000)
+    );
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.82rem;
+    box-shadow: 0 10px 24px -8px color-mix(in oklab, var(--color-flag) 65%, transparent);
+  }
+  .rep-banner svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .rep-verdict {
+    margin: 16px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--acc);
+  }
+  .rep-verdict-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--acc);
+  }
+
+  .rep-actions {
+    margin-top: auto;
+    padding: 22px 26px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rep-act {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+  .rep-act svg {
+    width: 24px;
+    height: 24px;
+  }
+  .rep-act-decline {
+    background: var(--color-flag);
+    transform: rotate(135deg);
+  }
+  .rep-act-accept {
+    position: relative;
+    isolation: isolate;
+  }
+  /* Solid face sits above the pulse ring but below the icon. */
+  .rep-act-accept::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: 50%;
+    background: #16a34a;
+  }
+  /* Expanding ring: scale/opacity disc behind the face (composited),
+     replacing the per-frame box-shadow repaint. */
+  .rep-screen.theme-trust .rep-act-accept::after {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    border-radius: 50%;
+    background: color-mix(in oklab, #16a34a 60%, transparent);
+    animation: rep-accept-pulse 1.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes rep-accept-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    60%,
+    100% {
+      transform: scale(1.444);
+      opacity: 0;
+    }
+  }
+
+  .rep-home {
+    display: block;
+    width: 112px;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
+    margin: 16px auto 2px;
+  }
+
+  /* Halt the looping CSS pulses while the phone is scrolled out of view. */
+  [data-call].is-paused .rep-ring,
+  [data-call].is-paused .rep-act-accept::after {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rep-ring,
+    .rep-screen.theme-trust .rep-act-accept::after {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  /**
+   * Incoming-call screen that loops through the three outcomes the product
+   * surfaces. One GSAP timeline swaps the scenario, scrambles the carrier-
+   * resolved caller name, stamps the attestation badge, and (when flagged)
+   * slams a spam banner in with a screen shake. The timeline only runs while
+   * the phone is on screen; reduced-motion shows a single static frame.
+   */
+  const phone = document.querySelector<HTMLElement>('#reputation [data-call]');
+  const screen = phone?.querySelector<HTMLElement>('[data-screen]') ?? null;
+
+  if (phone && screen) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const el = <T extends Element>(sel: string) =>
+      screen.querySelector<T>(sel)!;
+    const nameEl = el<HTMLElement>('[data-name]');
+    const subEl = el<HTMLElement>('[data-sub]');
+    const initialsEl = el<HTMLElement>('[data-initials]');
+    const gradeEl = el<HTMLElement>('[data-grade]');
+    const wordEl = el<HTMLElement>('[data-word]');
+    const badgeEl = el<HTMLElement>('[data-badge]');
+    const bannerEl = el<HTMLElement>('[data-banner]');
+    const verdictEl = el<HTMLElement>('[data-verdict]');
+    const verdictTextEl = el<HTMLElement>('[data-verdict-text]');
+    const callerEl = el<HTMLElement>('[data-caller]');
+    const avatarEl = el<HTMLElement>('[data-avatar]');
+    const flashEl = el<HTMLElement>('[data-flash]');
+
+    type Scene = {
+      theme: 'flag' | 'amber' | 'trust';
+      name: string;
+      sub: string;
+      grade: string;
+      word: string;
+      spam: boolean;
+      verdict: string;
+      initials: string;
+    };
+
+    // Problem first, then what good looks like, then loop.
+    const scenes: Scene[] = [
+      {
+        theme: 'flag',
+        name: 'Spam Likely',
+        sub: '+1 (628) 555-0114',
+        grade: 'C',
+        word: 'Unsigned',
+        spam: true,
+        verdict: 'Sent to voicemail',
+        initials: '!',
+      },
+      {
+        theme: 'amber',
+        name: 'Unknown Caller',
+        sub: '+1 (628) 555-0114',
+        grade: 'B',
+        word: 'Partial',
+        spam: false,
+        verdict: 'Likely ignored',
+        initials: '?',
+      },
+      {
+        theme: 'trust',
+        name: 'Northwind Roofing',
+        sub: 'Verified business',
+        grade: 'A',
+        word: 'Verified',
+        spam: false,
+        verdict: 'Answered',
+        initials: 'NR',
+      },
+    ];
+
+    const render = (s: Scene) => {
+      screen.classList.remove('theme-flag', 'theme-amber', 'theme-trust');
+      screen.classList.add(`theme-${s.theme}`);
+      subEl.textContent = s.sub;
+      initialsEl.textContent = s.initials;
+      gradeEl.textContent = s.grade;
+      wordEl.textContent = s.word;
+      verdictTextEl.textContent = s.verdict;
+      bannerEl.style.display = s.spam ? 'inline-flex' : 'none';
+    };
+
+    // Scramble a string toward its final value (carrier resolving the name).
+    const scramble = (target: HTMLElement, final: string, duration: number) => {
+      const glyphs = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#@%&';
+      const proxy = { p: 0 };
+      return gsap.to(proxy, {
+        p: 1,
+        duration,
+        ease: 'none',
+        onUpdate: () => {
+          const reveal = Math.floor(final.length * proxy.p);
+          let out = '';
+          for (let i = 0; i < final.length; i++) {
+            if (i < reveal || final[i] === ' ') out += final[i];
+            else out += glyphs[Math.floor(Math.random() * glyphs.length)];
+          }
+          target.textContent = out;
+        },
+        onComplete: () => {
+          target.textContent = final;
+        },
+      });
+    };
+
+    const build = () => {
+      const tl = gsap.timeline({ repeat: -1 });
+      scenes.forEach((s) => {
+        tl.call(render, [s]);
+        // caller block + avatar enter
+        tl.fromTo(
+          [avatarEl, callerEl],
+          { y: 22, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' }
+        );
+        tl.add(scramble(nameEl, s.name, 0.55), '<');
+        // attestation badge stamps in
+        tl.fromTo(
+          badgeEl,
+          { scale: 1.7, rotate: -12, opacity: 0 },
+          { scale: 1, rotate: 0, opacity: 1, duration: 0.5, ease: 'back.out(2.2)' },
+          '-=0.15'
+        );
+        if (s.spam) {
+          tl.fromTo(
+            bannerEl,
+            { y: -14, opacity: 0, scale: 0.9 },
+            { y: 0, opacity: 1, scale: 1, duration: 0.32, ease: 'power3.out' }
+          );
+          tl.fromTo(
+            flashEl,
+            { opacity: 0.5 },
+            { opacity: 0, duration: 0.55, ease: 'power2.out' },
+            '<'
+          );
+          tl.to(
+            screen,
+            { x: 7, duration: 0.045, repeat: 7, yoyo: true, ease: 'none' },
+            '<'
+          );
+          tl.set(screen, { x: 0 });
+        }
+        // verdict pops
+        tl.fromTo(
+          verdictEl,
+          { scale: 0.7, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(2)' },
+          '-=0.05'
+        );
+        // hold, then exit
+        tl.to({}, { duration: 2.1 });
+        tl.to([avatarEl, callerEl, badgeEl, bannerEl, verdictEl], {
+          opacity: 0,
+          y: -14,
+          duration: 0.4,
+          ease: 'power2.in',
+        });
+      });
+      return tl;
+    };
+
+    if (reduce) {
+      // Static, complete frame: the spam scenario (the "aha" the tool catches).
+      render(scenes[0]);
+      nameEl.textContent = scenes[0].name;
+    } else {
+      const tl = build();
+      tl.pause();
+
+      // Run only while the phone is in view. `is-paused` also halts the pure-CSS
+      // ring/accept pulses so nothing animates off-screen.
+      if ('IntersectionObserver' in window) {
+        phone.classList.add('is-paused');
+        const io = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              tl.play();
+              phone.classList.remove('is-paused');
+            } else {
+              tl.pause();
+              phone.classList.add('is-paused');
+            }
+          },
+          { threshold: 0.35 }
+        );
+        io.observe(phone);
+      } else {
+        tl.play();
+      }
+    }
+  }
+</script>

@@ -1,0 +1,122 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { LEGAL } from '../data/site';
+
+const email = LEGAL.contactEmail;
+---
+
+<LegalLayout
+  title="Refund & Cancellation Policy"
+  eyebrow="Legal"
+  path="/refunds/"
+  lede="How billing, cancellation, and refunds work for your DummyLead subscription. Clear terms, no surprises."
+  description="DummyLead Refund & Cancellation Policy: how the per-seed subscription is billed, how to cancel, and when refunds apply."
+>
+  <h2>1. Subscription billing</h2>
+  <p>
+    DummyLead is a recurring subscription billed in advance, priced per
+    concurrent active seed per month, at the rates on our
+    <a href="/#pricing">pricing</a> page. Each billing cycle is charged through
+    our payment processor at the start of the cycle. By subscribing you authorize
+    these recurring charges until you cancel.
+  </p>
+
+  <h2>2. Adding and retiring seeds</h2>
+  <p>
+    You can add or retire seeds at any time from your dashboard. Changes apply
+    immediately and are <strong>prorated</strong> to your current billing cycle:
+    adding seeds adds a prorated charge, and retiring seeds reduces what counts
+    toward your next renewal. Only concurrent active seeds count toward your bill.
+  </p>
+
+  <h2>3. Cancellation</h2>
+  <ul>
+    <li>
+      You can cancel at any time from your dashboard or by emailing
+      <a href={`mailto:${email}`}>{email}</a>.
+    </li>
+    <li>
+      Cancellation stops future renewals. Your subscription stays active until
+      the end of the cycle you have already paid for, and you keep access until
+      then.
+    </li>
+    <li>
+      We do not charge a cancellation fee, and we do not lock you into a fixed
+      term unless you have separately agreed to an annual or custom contract in
+      writing.
+    </li>
+  </ul>
+
+  <h2>4. Refunds</h2>
+  <p>
+    Because DummyLead delivers a usage-based service that we provision as soon as
+    your seeds go live, fees are generally <strong>non-refundable</strong>, and
+    we do not provide prorated refunds for partial billing periods after a
+    cancellation takes effect. The following exceptions apply:
+  </p>
+  <ul>
+    <li>
+      <strong>Billing errors.</strong> If you were charged in error, for example
+      a duplicate charge or a charge after a confirmed cancellation, we will
+      refund the incorrect amount.
+    </li>
+    <li>
+      <strong>Service failure.</strong> If a sustained fault on our side prevents
+      the service from working and we cannot resolve it in a reasonable time, we
+      will, at our discretion, issue a credit or a refund for the affected
+      period.
+    </li>
+    <li>
+      <strong>Where required by law.</strong> Nothing in this policy limits any
+      non-waivable refund or cancellation right you have under applicable
+      consumer-protection law where you live.
+    </li>
+  </ul>
+
+  <h2>5. How to request a refund</h2>
+  <p>
+    Email <a href={`mailto:${email}`}>{email}</a> from the address on your account
+    within <strong>30 days</strong> of the charge, with your account details and
+    the reason for the request. We aim to review requests within five business
+    days. Approved refunds are returned to your original payment method through
+    our payment processor; the time it takes to appear depends on your bank or
+    card issuer.
+  </p>
+
+  <h2>6. Chargebacks</h2>
+  <p>
+    If you believe a charge is wrong, please contact us first, we can almost
+    always resolve it faster than a chargeback. Filing a chargeback without
+    contacting us may result in suspension of your account while the dispute is
+    investigated.
+  </p>
+
+  <h2>7. Failed payments</h2>
+  <p>
+    If a payment fails, we may retry it and will notify you. If it remains unpaid,
+    we may suspend or downgrade your account until the balance is settled. Your
+    data is retained as described in our <a href="/privacy/">Privacy Policy</a>
+    during any suspension.
+  </p>
+
+  <h2>8. Changes to this policy</h2>
+  <p>
+    We may update this policy from time to time. Changes take effect on the
+    updated effective date above and apply to billing cycles that begin after
+    that date.
+  </p>
+
+  <h2>9. Contact</h2>
+  <p>
+    Billing questions: <a href={`mailto:${email}`}>{email}</a>. This policy works
+    alongside our <a href="/terms/">Terms of Service</a>.
+  </p>
+
+  <div class="legal-callout">
+    <p>
+      <strong>Not legal advice.</strong> The consumer laws of the places where
+      you sell may grant rights this policy cannot override. Have an attorney
+      confirm your refund obligations before publishing.
+    </p>
+  </div>
+</LegalLayout>

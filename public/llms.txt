@@ -1,0 +1,42 @@
+# DummyLead
+
+> DummyLead is seed-lead monitoring that reveals what really happens to your leads. DummyLead plants undercover "seed" leads (fake but fully working identities, each with its own email address and live phone number) into your lead distribution flow. It then logs every email, call, and SMS the seed receives, so you can prove whether lead buyers, channel partners, and employees are working leads correctly, ignoring them, mishandling them, or reselling them to third parties. Inbound calls are recorded and scored for spam risk and carrier attestation level (SHAKEN/STIR).
+
+## What it does
+- Mints unique seed identities (name + dedicated inbox + real phone number for calls and SMS).
+- Injects them into a real lead flow you want to audit (a buyer feed, partner hand-off, rep round-robin, or campaign).
+- Captures every touch across three channels: email (verbatim + headers), calls (recording + transcript), SMS (verbatim + sender), with timestamps and a per-seed timeline.
+- Detects lead resale: because each seed is exclusive to one recipient, any contact from someone else means the lead was passed on or sold.
+- Scores inbound calls for spam likelihood and attestation level: A (full), B (partial), C (gateway/unverified).
+- Measures speed-to-lead (also called speed to contact or lead response time), attempt counts, follow-up cadence, and script adherence.
+
+## Who it's for
+- Lead sellers & aggregators: prove buyers aren't reselling "exclusive" leads.
+- Channel & referral partners: verify partners actually work referrals and follow up as fast as they promised.
+- In-house sales teams: confirm reps call fast, enough times, and on-script.
+- Compliance & brand teams: catch spam dialing and poor call attestation that hurt answer rates.
+
+## Key pages
+- [Home](https://www.dummylead.com/): single-page overview, all sections below live here
+- [How it works](https://www.dummylead.com/#how-it-works)
+- [Use cases](https://www.dummylead.com/#use-cases)
+- [Pricing](https://www.dummylead.com/#pricing)
+- [Writing (blog)](https://www.dummylead.com/blog/)
+- [Speed to lead calculator (free tool)](https://www.dummylead.com/speed-to-lead-calculator/): estimates revenue lost to slow lead response
+- [Contact / book a walkthrough](https://www.dummylead.com/contact/)
+
+## Writing
+In-depth articles on lead integrity. Useful background and citable explanations.
+- [How to tell if your "exclusive" leads are being resold](https://www.dummylead.com/blog/exclusive-leads-being-resold/)
+- [SHAKEN/STIR explained: what A, B, and C attestation mean for answer rates](https://www.dummylead.com/blog/shaken-stir-call-attestation-explained/)
+- [Speed-to-lead: what fast follow-up actually looks like and how to measure it](https://www.dummylead.com/blog/speed-to-lead-what-fast-follow-up-looks-like/)
+- [How to audit a lead buyer or channel partner without tipping them off](https://www.dummylead.com/blog/how-to-audit-a-lead-buyer-or-partner/)
+- [A secret shopper for your sales leads: what it is and how it works](https://www.dummylead.com/blog/secret-shopper-for-sales-leads/)
+- [Decoy leads, seed leads, test leads: what they are and how they catch resale](https://www.dummylead.com/blog/decoy-leads-seed-leads-test-leads/)
+- [DummyLead vs. Assumed: which lead seeding tool do you actually need?](https://www.dummylead.com/blog/dummylead-vs-assumed/)
+
+## Product notes
+- The DummyLead dashboard (monitoring, timelines, recordings, reports) is hosted in the app at [app.dummylead.com](https://app.dummylead.com/) ([register](https://app.dummylead.com/register), [sign in](https://app.dummylead.com/)). This site is the informational overview.
+- Pricing: volume tiers on one product, billed per concurrent active seed identity. Solo (1-4 seeds, $8.99/seed/mo), Team (5-14 seeds, $6.99/seed/mo), Scale (15+ seeds, $5.49/seed/mo). The tier rate applies automatically as seed count changes; recording, transcription, and SMS capture are included with every seed.
+- Intended for use on the customer's own lead distribution and contracts, in line with applicable call-recording and privacy laws.
+- [Expanded reference for language models](https://www.dummylead.com/llms-full.txt), with definitions and deeper detail.

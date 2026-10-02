@@ -1,0 +1,463 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   DummyLead design system  ·  "Sleuth Emerald"
+   Direction: Professional, credible SaaS. Clean, restrained, trustworthy.
+   Dark-green ink authority + emerald accent (matches the fedora logo).
+   Functional color story (mirrors the product):
+     signal/emerald = clean lead, worked correctly (brand accent)
+     amber          = suspicious activity
+     flag/rose      = confirmed misuse / reselling / spam
+     trust/teal     = call attestation / verified
+   ============================================================ */
+
+@theme {
+  /* ---- type ---- */
+  /* --font-hanken-grotesk / --font-inter are defined by Astro's <Font>
+     component (BaseLayout) and already resolve to the self-hosted face plus
+     optimized fallback metrics; the trailing system fonts are a safety net. */
+  --font-display: var(--font-hanken-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Label/data role: kept as a variable, shares the Inter body face. */
+  --font-mono: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* True monospace for console/evidence data readouts (rebuilt sections). */
+  --font-code: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- surfaces (light) ---- */
+  --color-ink: #ffffff; /* page bg & "on-accent" text (white on cobalt) */
+  --color-ink-2: #eef0fc; /* light wash */
+  --color-surface: #ffffff; /* card fill */
+  --color-surface-2: #f0f0fa; /* recessed/alt fill */
+  --color-line: rgba(19, 26, 38, 0.1);
+  --color-line-strong: rgba(19, 26, 38, 0.18);
+
+  /* ---- brand dark-green ink (footer / CTA band anchors) ---- */
+  --color-navy: #0b2018;
+  --color-navy-2: #07140f;
+
+  /* ---- text ---- */
+  --color-bone: #1c1b2e; /* primary text (navy-charcoal) */
+  --color-bone-dim: #3a3650; /* secondary */
+  --color-muted: #5d5878; /* tertiary */
+  --color-faint: #989aae; /* faint labels */
+
+  /* ---- signal palette (Sleuth Emerald) ---- */
+  --color-signal: #059669; /* emerald: clean / brand accent (matches the logo) */
+  --color-signal-deep: #047857; /* deeper emerald: button fills (white text passes AA) */
+  --color-amber: #d97706; /* suspicious */
+  --color-flag: #e11d48; /* confirmed misuse */
+  --color-trust: #0d9488; /* attestation / verified (teal, distinct from brand emerald) */
+
+  /* ---- elevation ---- */
+  --shadow-sm: 0 1px 2px rgba(19, 26, 38, 0.06), 0 1px 3px rgba(19, 26, 38, 0.05);
+  --shadow: 0 6px 20px -6px rgba(19, 26, 38, 0.12), 0 2px 8px -2px rgba(19, 26, 38, 0.07);
+  --shadow-lg: 0 28px 56px -28px rgba(19, 26, 38, 0.26);
+
+  /* ---- radii ---- */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Anchored sections clear the sticky header (68px) when scrolled to. */
+:where(section, article)[id] {
+  scroll-margin-top: 84px;
+}
+
+/* Lenis smooth scroll base styles. Only active once Lenis adds these classes
+   to <html>; under reduced-motion Lenis never initializes, so native scroll
+   (and the CSS smooth-scroll above) is left alone. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+body {
+  background-color: #f8f8fc;
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-signal);
+  color: #ffffff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   Atmosphere: bright base with a soft indigo/sky wash and an
+   ultra-faint technical grid up top; clean, not noisy.
+   ============================================================ */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(
+      1000px 620px at 86% -12%,
+      color-mix(in oklab, var(--color-signal) 12%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      780px 600px at 4% -4%,
+      color-mix(in oklab, var(--color-trust) 7%, transparent),
+      transparent 55%
+    ),
+    #f8f8fc;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(19, 26, 38, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19, 26, 38, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(
+    130% 110% at 50% 0%,
+    #000 0%,
+    transparent 68%
+  );
+  mask-image: radial-gradient(130% 110% at 50% 0%, #000 0%, transparent 68%);
+  opacity: 0.8;
+}
+
+/* faint grain, just enough to avoid a sterile flat white */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   Layout helpers
+   ============================================================ */
+
+.shell {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding-inline: 40px;
+  }
+}
+
+.rule {
+  border-top: 1px solid var(--color-line);
+}
+
+/* vertical rhythm for major page sections */
+.section {
+  padding-block: clamp(40px, 5vw, 72px);
+}
+.section-tight {
+  padding-block: clamp(28px, 3.5vw, 48px);
+}
+
+/* ============================================================
+   Eyebrow / section label: a dashed "decoy chip" that echoes the
+   logo's ghost-card outline. Uppercase, tracked "console" voice.
+   ============================================================ */
+
+.eyebrow {
+  position: relative;
+  z-index: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: 0.42em 0.85em 0.42em 0.72em;
+  border: 1px dashed color-mix(in oklab, var(--color-signal) 40%, var(--color-line-strong));
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-signal) 5%, transparent);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-signal);
+}
+
+/* The pulse ring: a scaling/fading disc behind the dot (negative z-index),
+   so it composites on the GPU instead of repainting a box-shadow each frame.
+   Anchored to the dot's centre: left padding (0.72em) + half the 6px dot. */
+.eyebrow::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: calc(0.72em + 3px);
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--color-signal) 45%, transparent);
+  animation: pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  70%,
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   Panels / cards: white surfaces with soft elevation
+   ============================================================ */
+
+.panel {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.panel-pad {
+  padding: clamp(20px, 3vw, 34px);
+}
+
+/* corner ticks: subtle registration marks (kept as a brand detail) */
+.ticks::before,
+.ticks::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--color-line-strong);
+}
+.ticks::before {
+  top: 12px;
+  left: 12px;
+  border-left: 1px solid;
+  border-top: 1px solid;
+}
+.ticks::after {
+  bottom: 12px;
+  right: 12px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  padding: 0.85em 1.4em;
+  border-radius: 999px;
+  border: 1px solid var(--color-line-strong);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.18s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Filled CTA uses the deeper teal so white label text passes AA
+   (the brighter --color-signal fails contrast against white). */
+.btn-primary {
+  background: var(--color-signal-deep);
+  color: #ffffff;
+  border-color: var(--color-signal-deep);
+  font-weight: 600;
+  box-shadow:
+    var(--shadow),
+    0 8px 22px -8px color-mix(in oklab, var(--color-signal) 60%, transparent);
+}
+
+.btn-primary:hover {
+  background: color-mix(in oklab, var(--color-signal-deep) 86%, #000);
+  border-color: color-mix(in oklab, var(--color-signal-deep) 86%, #000);
+  box-shadow:
+    var(--shadow),
+    0 12px 28px -8px color-mix(in oklab, var(--color-signal) 70%, transparent);
+}
+
+.btn-ghost {
+  background: var(--color-surface);
+  color: var(--color-bone);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-ghost:hover {
+  border-color: var(--color-line-strong);
+  background: var(--color-surface-2);
+}
+
+/* on dark navy anchors (footer / CTA band), ghost buttons invert */
+.on-navy .btn-ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: #eef3f1;
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: none;
+}
+.on-navy .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ============================================================
+   Status pills: reuse the functional color story everywhere
+   ============================================================ */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.32em 0.66em;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  background: color-mix(in oklab, currentColor 8%, transparent);
+}
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.pill-signal {
+  color: var(--color-signal-deep);
+}
+.pill-amber {
+  color: var(--color-amber);
+}
+.pill-flag {
+  color: var(--color-flag);
+}
+.pill-trust {
+  color: var(--color-trust);
+}
+
+/* ============================================================
+   Reveal-on-load: staggered entrance (one orchestrated moment).
+   Respects reduced-motion.
+   ============================================================ */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* inline highlighted words in headlines */
+.hl {
+  color: var(--color-signal);
+}
+.hl-trust {
+  color: var(--color-trust);
+}

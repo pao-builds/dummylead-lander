@@ -1,0 +1,183 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../data/site';
+
+// One static route per published post. Drafts are excluded, so they never
+// build a page or land in the sitemap.
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const path = `/blog/${post.id}/`;
+const url = new URL(path, SITE.url).href;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+
+// BlogPosting tells search + LLMs this is a dated article authored by the
+// organization, which is what makes it eligible to be cited as a source.
+const blogPosting = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate && {
+    dateModified: post.data.updatedDate.toISOString(),
+  }),
+  author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+  publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  url,
+  keywords: post.data.tags.join(', '),
+};
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Writing',
+      item: new URL('/blog/', SITE.url).href,
+    },
+    { '@type': 'ListItem', position: 3, name: post.data.title, item: url },
+  ],
+};
+---
+
+<BaseLayout
+  title={post.data.title}
+  path={path}
+  description={post.data.description}
+  jsonLd={[blogPosting, breadcrumb]}
+>
+  <article class="section">
+    <div class="shell article">
+      <a href="/blog/" class="back-link">← Writing</a>
+      <header class="article-head">
+        <time datetime={post.data.pubDate.toISOString()} class="article-date">
+          {fmt(post.data.pubDate)}
+        </time>
+        <h1 class="article-title">{post.data.title}</h1>
+        <p class="article-lede">{post.data.description}</p>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    max-width: 68ch;
+  }
+  .back-link {
+    font-family: var(--font-code);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--color-bone-dim);
+    transition: color 0.16s ease;
+  }
+  .back-link:hover {
+    color: var(--color-signal);
+  }
+  .article-head {
+    padding: 24px 0 8px;
+    border-bottom: 1px solid var(--color-line);
+    margin-bottom: 36px;
+  }
+  .article-date {
+    font-family: var(--font-code);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-bone-dim);
+  }
+  .article-title {
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    line-height: 1.1;
+    margin: 14px 0 18px;
+    max-width: 22ch;
+  }
+  .article-lede {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-bone-dim);
+    margin: 0;
+  }
+
+  /* Long-form readability. Inherits the site palette via CSS variables. */
+  .prose {
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+  .prose :global(h2) {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    line-height: 1.2;
+    margin: 2.2em 0 0.6em;
+  }
+  .prose :global(h3) {
+    font-size: 1.2rem;
+    margin: 1.8em 0 0.5em;
+  }
+  .prose :global(p) {
+    margin: 0 0 1.2em;
+    color: var(--color-bone);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 1.3em;
+    padding-left: 1.3em;
+    color: var(--color-bone);
+  }
+  .prose :global(li) {
+    margin: 0.4em 0;
+    line-height: 1.65;
+  }
+  .prose :global(strong) {
+    color: var(--color-bone);
+    font-weight: 600;
+  }
+  .prose :global(a) {
+    color: var(--color-signal);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose :global(blockquote) {
+    margin: 1.6em 0;
+    padding: 0.2em 0 0.2em 1.1em;
+    border-left: 2px solid var(--color-signal);
+    color: var(--color-bone-dim);
+    font-style: italic;
+  }
+  .prose :global(code) {
+    font-family: var(--font-code);
+    font-size: 0.88em;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+  .prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--color-line);
+    margin: 2.4em 0;
+  }
+</style>

@@ -1,0 +1,161 @@
+---
+import { PRICING } from '../data/content';
+import { CTA } from '../data/site';
+import SectionHeader from './SectionHeader.astro';
+
+const ctaFor = (kind: 'start' | 'talk') =>
+  kind === 'talk' ? CTA.demo : CTA.primary;
+---
+
+<section id="pricing" class="section">
+  <div class="shell">
+    <SectionHeader eyebrow="Pricing" title="Pay per seed. Pay less as you scale.">
+      {PRICING.note}
+    </SectionHeader>
+
+    <div class="tiers">
+      {
+        PRICING.tiers.map((t) => (
+          <article class:list={['tier', { featured: t.featured }]}>
+            {t.featured && <span class="tier-flag">Most popular</span>}
+            <header class="tier-head">
+              <h3 class="tier-name">{t.name}</h3>
+              <p class="tier-for">{t.forWho}</p>
+            </header>
+
+            <div class="tier-price">
+              <span class="price">{t.price}</span>
+              <span class="unit">{t.unit}</span>
+            </div>
+            <span class="tier-seeds">{t.seeds}</span>
+
+            <a
+              href={ctaFor(t.cta).href}
+              class:list={['btn', t.featured ? 'btn-primary' : 'btn-ghost', 'tier-cta']}
+            >
+              {ctaFor(t.cta).label}
+            </a>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="tier-foot">
+      Figures shown are indicative. You’ll always see exact per-seed rates
+      before anything bills, and you can add or retire seeds anytime.
+    </p>
+  </div>
+</section>
+
+<style>
+  .tiers {
+    margin-top: clamp(40px, 5vw, 60px);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    align-items: stretch;
+  }
+  @media (min-width: 820px) {
+    .tiers {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .tier {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    padding: clamp(24px, 3vw, 32px);
+    box-shadow: var(--shadow-sm);
+  }
+  /* The featured tier is the one bold move: lifted, accented, white CTA. */
+  .tier.featured {
+    border-color: var(--color-signal);
+    box-shadow:
+      var(--shadow),
+      0 22px 48px -24px color-mix(in oklab, var(--color-signal) 55%, transparent);
+  }
+  @media (min-width: 820px) {
+    .tier.featured {
+      transform: translateY(-12px);
+    }
+  }
+  .tier-flag {
+    position: absolute;
+    top: -11px;
+    left: clamp(24px, 3vw, 32px);
+    font-family: var(--font-code);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--color-signal);
+    padding: 4px 10px;
+    border-radius: 999px;
+    box-shadow: 0 6px 16px -6px color-mix(in oklab, var(--color-signal) 70%, transparent);
+  }
+
+  .tier-name {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+  .tier-for {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 8px 0 0;
+    min-height: 2.7em;
+  }
+
+  .tier-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .price {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.4rem, 4.5vw, 3rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .unit {
+    font-family: var(--font-code);
+    font-size: 0.78rem;
+    color: var(--color-muted);
+  }
+  .tier-seeds {
+    display: inline-flex;
+    align-self: flex-start;
+    margin-top: 14px;
+    font-family: var(--font-code);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--color-bone-dim);
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-surface-2);
+  }
+
+  .tier-cta {
+    margin-top: 26px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .tier-foot {
+    margin: clamp(28px, 4vw, 40px) auto 0;
+    max-width: 56ch;
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+/**
+ * Brand symbol: the DummyLead sleuth fedora. Renders the designer-supplied
+ * mark as an <img>. Use variant="white" on dark surfaces (footer / CTA bands)
+ * and the default emerald mark on light surfaces.
+ *
+ * The full horizontal lockup (hat + wordmark) lives in the header directly;
+ * this component is the symbol-only mark for tighter placements.
+ */
+interface Props {
+  variant?: 'color' | 'white';
+  size?: number;
+  class?: string;
+}
+const { variant = 'color', size = 28, class: cls } = Astro.props;
+const src = variant === 'white' ? '/symbol-white.png' : '/favicon-512.png';
+---
+
+<img
+  src={src}
+  alt=""
+  width={size}
+  height={size}
+  class:list={['logo', cls]}
+  aria-hidden="true"
+  loading="eager"
+  decoding="async"
+/>
+
+<style>
+  .logo {
+    display: block;
+    object-fit: contain;
+  }
+</style>

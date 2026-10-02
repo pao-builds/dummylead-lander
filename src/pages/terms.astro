@@ -1,0 +1,225 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { SITE, LEGAL } from '../data/site';
+
+const op = LEGAL.operator;
+const email = LEGAL.contactEmail;
+---
+
+<LegalLayout
+  title="Terms of Service"
+  eyebrow="Legal"
+  path="/terms/"
+  lede="The agreement between you and DummyLead: your subscription, acceptable use, billing, liability, and the rules that govern the service."
+  description="DummyLead Terms of Service: subscription terms, customer compliance obligations for call recording, billing, warranties, liability, and governing law."
+>
+  <p>
+    These Terms of Service (the "Terms") are a binding agreement between you, or
+    the company you represent ("you", "Customer"), and
+    {op}, {LEGAL.operatorDescriptor}, operating
+    the DummyLead service at <strong>{SITE.domain}</strong> and
+    <strong>{SITE.appUrl.replace('https://', '')}</strong> ("DummyLead", "we",
+    "us"). By creating an account or using the service you agree to these Terms.
+    If you do not agree, do not use the service.
+  </p>
+
+  <h2>1. The service</h2>
+  <p>
+    DummyLead is a seed-lead monitoring tool. We create decoy "seed" lead
+    identities, each with an inbox and a live phone line, that you place into a
+    lead flow you control. We then capture and present the calls, texts, and
+    emails that reach those seeds, along with derived signals such as response
+    time, spam risk, and call attestation. You are responsible for how you place
+    and use seeds and for the conclusions you draw from the data.
+  </p>
+
+  <h2>2. Eligibility and accounts</h2>
+  <ul>
+    <li>
+      You must be at least 18 and able to form a binding contract. If you use
+      DummyLead for an organization, you represent that you are authorized to
+      bind it.
+    </li>
+    <li>
+      You are responsible for the accuracy of your account information, for
+      keeping your credentials secure, and for all activity under your account.
+    </li>
+    <li>Notify us promptly at <a href={`mailto:${email}`}>{email}</a> of any unauthorized use.</li>
+  </ul>
+
+  <h2>3. Customer compliance: recording, consent, and lawful use</h2>
+  <div class="legal-callout">
+    <p>
+      <strong>This is the most important section. Read it.</strong> DummyLead
+      records phone calls and captures messages. Laws on call recording and
+      monitoring vary widely by country and by US state, and some require the
+      consent of <strong>every</strong> party to a call ("two-party" or
+      "all-party" consent). You, the Customer, are solely responsible for
+      determining whether and how you may lawfully record, monitor, and use the
+      interactions captured through your seeds.
+    </p>
+  </div>
+  <p>You represent, warrant, and agree that:</p>
+  <ul>
+    <li>
+      You have all rights, consents, and lawful bases required to place seed
+      leads and to record, store, transcribe, and use every call, text, and
+      email they capture;
+    </li>
+    <li>
+      You will comply with all applicable laws, including wiretapping,
+      eavesdropping, call-recording, consent, telemarketing, anti-spam, and data
+      protection laws in every jurisdiction where you, your seeds, and the people
+      contacting them are located;
+    </li>
+    <li>
+      You will use captured data only for legitimate auditing, quality, and
+      compliance purposes, and not to harass, defraud, surveil unlawfully, or
+      discriminate against any person;
+    </li>
+    <li>
+      You will follow our <a href="/acceptable-use/">Acceptable Use Policy</a>,
+      which is incorporated into these Terms.
+    </li>
+  </ul>
+  <p>
+    You are the data controller for captured-interaction data; we process it on
+    your behalf under Section 11 and our <a href="/privacy/">Privacy Policy</a>.
+  </p>
+
+  <h2>4. Subscriptions, seeds, and billing</h2>
+  <ul>
+    <li>
+      DummyLead is billed as a subscription, priced per concurrent active seed,
+      monthly, at the rates shown on our <a href="/#pricing">pricing</a> page.
+      Some high-volume usage (for example, very high call volume) may be metered
+      and shown before it bills.
+    </li>
+    <li>
+      Fees are charged in advance for each billing cycle through our payment
+      processor. By subscribing you authorize recurring charges until you cancel.
+    </li>
+    <li>
+      Adding or retiring seeds changes your bill; tier rates apply automatically
+      and changes are prorated to your cycle.
+    </li>
+    <li>
+      Unless stated otherwise, fees are exclusive of taxes, and you are
+      responsible for any applicable taxes other than taxes on our income.
+    </li>
+    <li>
+      We may change pricing on a prospective basis with reasonable notice before
+      your next renewal.
+    </li>
+  </ul>
+  <p>
+    Cancellations and refunds are governed by our
+    <a href="/refunds/">Refund &amp; Cancellation Policy</a>.
+  </p>
+
+  <h2>5. Acceptable use</h2>
+  <p>
+    You may not use DummyLead to break the law, infringe rights, send spam,
+    stalk or harass, or interfere with the service's security or integrity. The
+    full list of prohibitions is in the
+    <a href="/acceptable-use/">Acceptable Use Policy</a>. We may suspend or
+    terminate accounts that violate it.
+  </p>
+
+  <h2>6. Intellectual property</h2>
+  <p>
+    We own the DummyLead service, software, and brand. We grant you a limited,
+    non-exclusive, non-transferable right to use the service during your
+    subscription. You own the data you submit and the reports generated for you;
+    you grant us the rights needed to operate the service and to create
+    aggregated, de-identified analytics that do not identify you or any
+    individual.
+  </p>
+
+  <h2>7. Third-party services</h2>
+  <p>
+    DummyLead relies on third-party providers for telephony, messaging,
+    transcription, hosting, and payments. Your use may be subject to their terms,
+    and we are not responsible for their acts or omissions.
+  </p>
+
+  <h2>8. Disclaimers</h2>
+  <p>
+    The service is provided "as is" and "as available". To the maximum extent
+    permitted by law, we disclaim all warranties, express or implied, including
+    merchantability, fitness for a particular purpose, and non-infringement. We
+    do not warrant that captured data, transcripts, spam scores, or attestation
+    grades are complete, accurate, or admissible as evidence, and DummyLead does
+    not provide legal advice. You are responsible for verifying findings before
+    acting on them.
+  </p>
+
+  <h2>9. Limitation of liability</h2>
+  <p>
+    To the maximum extent permitted by law, neither party is liable for indirect,
+    incidental, special, consequential, or punitive damages, or for lost profits
+    or data, arising from the service. Our total liability for any claim relating
+    to the service is limited to the fees you paid us in the 12 months before the
+    event giving rise to the claim. Some jurisdictions do not allow certain
+    limitations, so parts of this section may not apply to you.
+  </p>
+
+  <h2>10. Indemnification</h2>
+  <p>
+    You will defend, indemnify, and hold harmless DummyLead and
+    {op} from claims, damages, and costs
+    (including reasonable legal fees) arising from your use of the service, your
+    placement of seeds, your recording or use of captured interactions, or your
+    breach of these Terms or of any law, including call-recording and consent
+    laws.
+  </p>
+
+  <h2>11. Data processing</h2>
+  <p>
+    Where we process personal data on your behalf (captured-interaction data), we
+    act as your processor: we process it only on your documented instructions and
+    as needed to provide the service, apply appropriate safeguards, and use
+    sub-processors as described in our <a href="/privacy/">Privacy Policy</a>. You
+    are responsible for the lawfulness of the data you instruct us to process.
+  </p>
+
+  <h2>12. Suspension and termination</h2>
+  <p>
+    You may cancel at any time as described in the
+    <a href="/refunds/">Refund &amp; Cancellation Policy</a>. We may suspend or
+    terminate your access if you breach these Terms, fail to pay, or use the
+    service unlawfully or in a way that risks harm to others or to the service.
+    On termination, your right to use the service ends and we will handle your
+    data as described in the Privacy Policy.
+  </p>
+
+  <h2>13. Governing law and disputes</h2>
+  <p>
+    These Terms are governed by the laws of {LEGAL.jurisdiction}, without regard
+    to conflict-of-law rules. The courts of {LEGAL.jurisdiction} will have
+    jurisdiction over disputes, except where mandatory consumer-protection law
+    gives you the right to bring a claim where you live.
+  </p>
+
+  <h2>14. Changes to these Terms</h2>
+  <p>
+    We may update these Terms from time to time. Material changes take effect on
+    the updated effective date above, and your continued use of the service means
+    you accept them. If you do not agree, stop using the service and cancel.
+  </p>
+
+  <h2>15. Contact</h2>
+  <p>
+    Questions about these Terms: <a href={`mailto:${email}`}>{email}</a>. These
+    Terms are entered into with {op}, {LEGAL.operatorDescriptor}.
+  </p>
+
+  <div class="legal-callout">
+    <p>
+      <strong>Not legal advice.</strong> This document is a starting point and
+      not a substitute for review by a qualified attorney. Given that DummyLead
+      records calls across borders, have counsel confirm your recording-consent
+      and consumer-protection obligations before relying on these Terms.
+    </p>
+  </div>
+</LegalLayout>

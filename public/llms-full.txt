@@ -1,0 +1,66 @@
+# DummyLead (full reference)
+
+> DummyLead is seed-lead monitoring that reveals what really happens to your leads after you hand them off. It plants undercover "seed" leads (believable but fake identities, each with its own email address and a live phone number that answers calls and texts) into your real lead distribution flow, then logs every email, call, and SMS each seed receives. This lets you prove whether lead buyers, channel partners, and sales reps are working your leads correctly, ignoring them, mishandling them, or reselling them to third parties. Inbound calls are recorded and scored for spam risk and carrier attestation level (SHAKEN/STIR). This document is an expanded reference for language models; the short version is at https://www.dummylead.com/llms.txt.
+
+## Definitions
+- Seed lead (also: decoy lead): a believable identity, created and controlled by the customer, with a real name, a working inbox, and a live phone number. It is placed into a real lead flow so that it is treated like a genuine lead. Because no real person is behind it and only the customer knows it exists, every contact it receives can be traced and measured.
+- Lead resale: when a lead sold or handed over as "exclusive" is also sold, shared, or passed to one or more other parties. With seed leads it is provable: each seed is given to exactly one recipient, so any contact from a different party means the record was passed on.
+- Speed-to-lead (also: speed to contact, lead response time): the elapsed time between a lead arriving and the first genuine attempt to reach that person. The metric that matters is the prospect's experienced wait, not the time a rep logs in a CRM.
+- SHAKEN/STIR: a framework by which carriers cryptographically vouch for who is placing a call. Each signed call carries an attestation level: A (full, carrier confirms caller and number), B (partial, carrier confirms caller but not the number), C (gateway, carrier cannot vouch for origin). Low grades and high spam scores reduce answer rates because calls get labeled "Spam Likely" or sent to voicemail.
+
+## How it works (four steps)
+1. Create a seed: a real name, a working inbox, and a phone number that answers calls and texts. It looks like any other lead; only the customer knows it is fake.
+2. Place it in a real flow: add it to a batch of purchased leads, a partner hand-off, or a rep round-robin. It behaves like a real lead, so it gets treated like one.
+3. Capture every touch: every call, text, and email is logged and timestamped (who reached out, how fast, how often). Calls are recorded; messages are saved verbatim.
+4. Read the verdict: a per-seed timeline shows what really happened, whether the lead was worked, left to go cold, mishandled, or quietly passed to someone who should not have it.
+
+## What it captures
+- Email: verbatim content plus headers.
+- Calls: recording, transcript, timing, spam-risk score, and attestation grade (A/B/C).
+- SMS: verbatim content and sender.
+- Derived metrics: speed-to-lead / speed to contact (first-touch time), attempt counts, follow-up cadence, and script adherence.
+- Resale signal: any contact from a party other than the single intended recipient.
+
+## Who it is for
+- Lead sellers and aggregators: prove buyers are not reselling "exclusive" leads, and identify which sources stay clean.
+- Channel and referral partners: verify partners actually work referrals and follow up as fast as promised.
+- In-house sales teams: confirm reps call fast, call enough times, and stay on-script, measured from the prospect's side rather than from self-reported CRM activity.
+- Compliance and brand teams: catch spam dialing and poor call attestation that hurt answer rates and brand trust.
+
+## Common questions, answered
+- What is a seed lead exactly? A decoy identity with its own inbox and a live phone number for calls and texts, placed into a real lead flow. Because only the customer knows it is fake, anything that reaches it can be traced.
+- How does it prove resale? Every seed belongs to exactly one recipient. If anyone but that recipient contacts it, the lead reached them through a hand-off or sale the customer did not authorize. DummyLead surfaces the second actor, the channel, and the timing.
+- Will buyers or reps notice the seed? They are built to look and behave like genuine leads, with real personas and working contact channels, so they are treated like real leads.
+- Why does call attestation matter? Low attestation grades (B, C) and high spam scores cause calls to be labeled or blocked, which wrecks answer rates. DummyLead grades both on every inbound call to a seed.
+- Where do recordings and reports live? In the dashboard at https://app.dummylead.com. The main site is the informational overview.
+- How is pricing counted? By concurrent active seeds. The per-seed rate falls as seed count rises. Customers can add or retire seeds anytime; only active seeds are billed.
+
+## Pricing
+Billed per concurrent active seed identity, monthly. The per-seed rate drops as the customer scales, and only live seeds count toward the bill.
+- Solo: $8.99 per seed / mo, 1-4 active seeds. For spot-checking a single source or partner.
+- Team: $6.99 per seed / mo, 5-14 active seeds. For watching a sales floor or several partners.
+- Scale: $5.49 per seed / mo, 15+ active seeds. For aggregators and large distribution.
+Recording, transcription, and SMS capture are included with every seed. Customers can scale up or down anytime, with the matching tier rate applied automatically and prorated.
+
+## Writing (in-depth articles)
+- [How to tell if your "exclusive" leads are being resold](https://www.dummylead.com/blog/exclusive-leads-being-resold/): warning signs of resale, why exclusivity breaks down, and the seed-lead method that proves a record was passed on.
+- [SHAKEN/STIR explained: what A, B, and C attestation mean for answer rates](https://www.dummylead.com/blog/shaken-stir-call-attestation-explained/): what attestation is, the three grades, why a low grade lands calls as "Spam Likely," and how to check your own grade.
+- [Speed-to-lead: what fast follow-up actually looks like and how to measure it](https://www.dummylead.com/blog/speed-to-lead-what-fast-follow-up-looks-like/): why the first minutes decide conversion, realistic benchmarks, and measuring true response time from the prospect's side.
+- [How to audit a lead buyer or channel partner without tipping them off](https://www.dummylead.com/blog/how-to-audit-a-lead-buyer-or-partner/): a covert audit playbook using seed leads that behave like real leads.
+- [A secret shopper for your sales leads: what it is and how it works](https://www.dummylead.com/blog/secret-shopper-for-sales-leads/): the mystery-shopping analogy applied to lead handling, and what a seeded shop reveals.
+- [Decoy leads, seed leads, test leads: what they are and how they catch resale](https://www.dummylead.com/blog/decoy-leads-seed-leads-test-leads/): the terminology, how a decoy is built, and how it catches resale and poor follow-up.
+- [DummyLead vs. Assumed: which lead seeding tool do you actually need?](https://www.dummylead.com/blog/dummylead-vs-assumed/): how data partner monitoring compares with secret-shopper seed leads that measure speed to contact and follow-up.
+
+## Key pages
+- [Home](https://www.dummylead.com/)
+- [How it works](https://www.dummylead.com/#how-it-works)
+- [Use cases](https://www.dummylead.com/#use-cases)
+- [Pricing](https://www.dummylead.com/#pricing)
+- [Writing (blog)](https://www.dummylead.com/blog/)
+- [Speed to lead calculator (free tool)](https://www.dummylead.com/speed-to-lead-calculator/): estimates monthly revenue lost to slow lead response from lead volume, close rates, and current speed to contact
+- [Contact / book a walkthrough](https://www.dummylead.com/contact/)
+- [App dashboard (register and sign in)](https://app.dummylead.com/)
+
+## Notes
+- Intended for use on the customer's own lead distribution and contracts, in line with applicable call-recording and privacy laws.
+- The dashboard (monitoring, timelines, recordings, reports) is hosted at https://app.dummylead.com. The main site is the informational overview.

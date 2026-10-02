@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { SITE, CTA } from '../data/site';
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Contact',
+      item: new URL('/contact/', SITE.url).href,
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Contact"
+  path="/contact/"
+  description="Book a walkthrough of DummyLead or ask about seed-lead monitoring for your buyers, partners, and sales team."
+  jsonLd={[breadcrumb]}
+>
+  <PageHeader eyebrow="Get in touch" title="Book a walkthrough">
+    Tell us what you need to catch: buyer resale, slow partner follow-up,
+    rep performance, or spam and attestation. We’ll show you the seed that
+    proves it.
+  </PageHeader>
+
+  <section class="section">
+    <div class="shell contact-grid">
+      <div class="contact-email panel panel-pad">
+        <span class="eyebrow">Email us</span>
+        <h2>Tell us what you want to catch</h2>
+        <p>
+          Send a note with your use case (buyer resale, partner follow-up,
+          rep performance, or spam and attestation) and we’ll line up a
+          walkthrough with the seed that proves it. We read every message
+          and usually reply within one business day.
+        </p>
+        <a
+          href={`mailto:${SITE.email}?subject=${encodeURIComponent('Walkthrough request')}`}
+          class="btn btn-primary"
+        >
+          Email {SITE.email}
+        </a>
+      </div>
+
+      <aside class="contact-aside">
+        <div class="aside-block panel panel-pad">
+          <span class="eyebrow">Already a customer</span>
+          <h2>Jump to your dashboard</h2>
+          <p>All seeds, timelines, recordings, and reports live in the app.</p>
+          <a href={CTA.secondary.href} class="btn btn-ghost">Open dashboard →</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .contact-email h2 {
+    font-size: 1.6rem;
+    margin: 12px 0 12px;
+  }
+  .contact-email p {
+    color: var(--color-bone-dim);
+    line-height: 1.6;
+    font-size: 0.98rem;
+    margin-bottom: 22px;
+  }
+  .contact-email .btn {
+    justify-content: center;
+  }
+  .contact-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .aside-block h2 {
+    font-size: 1.4rem;
+    margin: 12px 0 8px;
+  }
+  .aside-block p {
+    color: var(--color-bone-dim);
+    line-height: 1.55;
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+  }
+  @media (min-width: 880px) {
+    .contact-grid {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+</style>

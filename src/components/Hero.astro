@@ -1,0 +1,497 @@
+---
+import { SITE, CTA } from '../data/site';
+
+// The hero shows the product instead of an abstract animation: a faithful,
+// hand-built recreation of the app's seed-detail screen (Secret Shopper),
+// using the portal's real labels and verdict strings so visitors see exactly
+// what they get. Pure HTML/CSS; the demo data is illustrative.
+const TOUCHES = [
+  {
+    date: 'Jul 2',
+    time: '09:12',
+    dot: 'ok',
+    channel: 'CALL',
+    title: 'Acme Home Services',
+    sub: 'Verified caller · reputation 88/100 · STIR A',
+  },
+  {
+    date: 'Jul 2',
+    time: '09:14',
+    dot: 'ok',
+    channel: 'SMS',
+    title: '(737) 555-0164',
+    sub: '“Hi Jane, this is Marcus with Acme. Good time for a quick call?”',
+  },
+  {
+    date: 'Jul 2',
+    time: '09:31',
+    dot: 'ok',
+    channel: 'EMAIL',
+    title: 'marcus@acmehomes.com',
+    sub: '“Your quote from Acme Home Services”',
+  },
+  {
+    date: 'Jul 3',
+    time: '16:08',
+    dot: 'flag',
+    channel: 'CALL',
+    title: 'Spam Likely',
+    sub: 'Likely spam · reputation 12/100 · STIR C',
+  },
+];
+---
+
+<section class="hero">
+  <div class="shell hero-inner">
+    <div class="hero-copy">
+      <h1 class="hero-title" data-reveal style="--d:0.06s">
+        Know what <span class="hl">actually</span> happens to your leads.
+      </h1>
+
+      <p class="hero-sub" data-reveal style="--d:0.14s">
+        Think of it as a <strong>secret shopper for your leads</strong>.
+        {SITE.name} drops a few <strong>seed leads</strong> into your pipeline
+        alongside the real ones, each with its own email and phone number. We
+        track every call, text, and email they get, so you can see who's
+        actually following up, who's letting them go cold, and who's quietly
+        <span class="u-flag">reselling</span> them.
+      </p>
+
+      <div class="hero-actions" data-reveal style="--d:0.22s">
+        <a href={CTA.primary.href} class="btn btn-primary cta-strong">
+          {CTA.primary.label}
+          <span class="cta-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/#how-it-works" class="cta-secondary">
+          See how it works
+          <span class="cta-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="mock-wrap" data-reveal style="--d:0.3s">
+      <p class="sr-only">
+        Screenshot of the DummyLead dashboard: a seed lead named Jane Doe with
+        a timeline of every inbound call, text, and email it received,
+        including a verified first call, saved messages, and a flagged
+        likely-spam call.
+      </p>
+      <div class="mock" aria-hidden="true">
+        <div class="mock-chrome">
+          <span class="mock-dot"></span>
+          <span class="mock-dot"></span>
+          <span class="mock-dot"></span>
+          <span class="mock-url">app.dummylead.com/overview</span>
+        </div>
+
+        <div class="mock-body">
+          <div class="mock-head">
+            <div class="mock-avatar">JD</div>
+            <div class="mock-id">
+              <span class="mock-name">Jane Doe</span>
+              <span class="mock-meta">jane.doe17@fourtmail.com · (512) 555-0143 · Austin, TX</span>
+            </div>
+            <span class="mock-status"><i></i>Active</span>
+          </div>
+
+          <div class="mock-label-row">
+            <span class="mock-label-k">Label</span>
+            <span class="mock-label-v">Exclusive buyer feed test</span>
+          </div>
+
+          <ol class="mock-timeline">
+            {TOUCHES.map((t) => (
+              <li class="touch">
+                <span class="touch-when">
+                  <em>{t.date}</em>
+                  {t.time}
+                </span>
+                <span class={`touch-dot ${t.dot === 'flag' ? 'is-flag' : ''}`}></span>
+                <span class="touch-channel">{t.channel}</span>
+                <span class="touch-text">
+                  <strong class={t.dot === 'flag' ? 'is-flag' : ''}>{t.title}</strong>
+                  <span class="touch-sub">{t.sub}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          <div class="mock-footer">
+            <span>4 contacts · 3 channels · <b class="is-flag">1 flagged</b></span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="mock-captions">
+        <li>Times every first touch, to the second</li>
+        <li>Saves every call, text, and email word for word</li>
+        <li>Scores spam risk and SHAKEN/STIR on every call</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: clamp(48px, 7vw, 96px) 0 clamp(32px, 5vw, 64px);
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(36px, 5vw, 56px);
+    align-items: center;
+  }
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: clamp(2.7rem, 6vw, 4.2rem);
+    margin: 22px 0 0;
+    max-width: 17ch;
+  }
+  .u-flag {
+    color: var(--color-flag);
+    font-weight: 700;
+  }
+  .hero-sub {
+    margin: 24px auto 0;
+    max-width: 60ch;
+    font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+    line-height: 1.62;
+    color: var(--color-bone-dim);
+  }
+  .hero-sub strong {
+    color: var(--color-bone);
+    font-weight: 600;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 22px;
+    margin-top: 34px;
+  }
+
+  .cta-strong {
+    position: relative;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    padding: 1.05em 1.9em;
+  }
+  .cta-strong .cta-arrow {
+    font-size: 1.08em;
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .cta-strong:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--color-bone-dim);
+    padding: 0.5em 0.2em;
+    transition: color 0.18s ease;
+  }
+  .cta-secondary .cta-arrow {
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .cta-secondary:hover {
+    color: var(--color-signal-deep);
+  }
+  .cta-secondary:hover .cta-arrow {
+    transform: translateX(3px);
+  }
+
+  /* ---- dashboard mock ---- */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .mock-wrap {
+    width: 100%;
+    max-width: 880px;
+    margin: 0 auto;
+    min-width: 0;
+  }
+
+  /* Desktop: the dashboard sits beside the copy, first thing in view. */
+  @media (min-width: 1080px) {
+    .hero-inner {
+      grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    }
+    .hero-copy {
+      align-items: flex-start;
+      text-align: left;
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 3.4vw, 3.4rem);
+      margin-top: 0;
+    }
+    .hero-sub {
+      margin-left: 0;
+      margin-right: 0;
+      max-width: 54ch;
+    }
+    .hero-actions {
+      justify-content: flex-start;
+    }
+    .mock-wrap {
+      margin: 0;
+    }
+  }
+  .mock {
+    text-align: left;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 16px;
+    box-shadow:
+      0 1px 2px rgba(19, 26, 38, 0.05),
+      0 24px 60px -30px rgba(19, 26, 38, 0.25);
+    overflow: hidden;
+  }
+  .mock-chrome {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .mock-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-line-strong);
+  }
+  .mock-url {
+    margin-left: 10px;
+    font-family: var(--font-code);
+    font-size: 0.72rem;
+    color: var(--color-muted);
+  }
+  .mock-body {
+    padding: clamp(16px, 3vw, 26px);
+  }
+  .mock-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .mock-avatar {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--color-signal) 12%, transparent);
+    color: var(--color-signal-deep);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex: none;
+  }
+  .mock-id {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .mock-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .mock-meta {
+    font-family: var(--font-code);
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mock-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    padding: 4px 12px;
+    border: 1px solid color-mix(in oklab, var(--color-signal) 35%, var(--color-line-strong));
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-signal-deep);
+    flex: none;
+  }
+  .mock-status i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-signal);
+  }
+  .mock-label-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 4px;
+    padding: 8px 12px;
+    background: var(--color-surface-2);
+    border-radius: 10px;
+    font-size: 0.78rem;
+  }
+  .mock-label-k {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.64rem;
+    font-weight: 600;
+    color: var(--color-faint);
+  }
+  .mock-label-v {
+    color: var(--color-bone-dim);
+    font-weight: 500;
+  }
+
+  .mock-timeline {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+  }
+  .touch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px dashed var(--color-line);
+  }
+  .touch:last-child {
+    border-bottom: 0;
+  }
+  .touch-when {
+    display: flex;
+    flex-direction: column;
+    width: 44px;
+    flex: none;
+    font-family: var(--font-code);
+    font-size: 0.74rem;
+    color: var(--color-bone-dim);
+  }
+  .touch-when em {
+    font-style: normal;
+    font-size: 0.62rem;
+    color: var(--color-faint);
+  }
+  .touch-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-signal);
+    flex: none;
+  }
+  .touch-dot.is-flag {
+    background: var(--color-flag);
+  }
+  .touch-channel {
+    flex: none;
+    padding: 2px 8px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 6px;
+    font-family: var(--font-code);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--color-muted);
+  }
+  .touch-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .touch-text strong {
+    font-size: 0.88rem;
+    font-weight: 650;
+  }
+  .touch-text strong.is-flag,
+  .is-flag {
+    color: var(--color-flag);
+  }
+  .touch-sub {
+    font-size: 0.76rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mock-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-line);
+    font-size: 0.76rem;
+    color: var(--color-muted);
+  }
+  .mock-footer b.is-flag {
+    font-weight: 650;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-strong .cta-arrow,
+    .cta-secondary .cta-arrow {
+      transition: none;
+    }
+  }
+
+  .mock-captions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 26px;
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--color-bone-dim);
+  }
+  .mock-captions li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mock-captions li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-signal);
+  }
+
+  @media (max-width: 640px) {
+    .touch-sub {
+      white-space: normal;
+    }
+    .touch {
+      flex-wrap: wrap;
+    }
+    .touch-chip {
+      margin-left: 56px;
+    }
+    .mock-meta {
+      white-space: normal;
+    }
+  }
+</style>

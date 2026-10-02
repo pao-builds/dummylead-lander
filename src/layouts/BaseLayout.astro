@@ -1,0 +1,127 @@
+---
+import { SITE } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '@vercel/analytics/astro';
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+
+/**
+ * BaseLayout: every page renders through here.
+ * Owns the <head>: title, meta description, canonical, OpenGraph/Twitter,
+ * and any page-specific JSON-LD structured data passed via `jsonLd`.
+ */
+interface Props {
+  title: string;
+  description?: string;
+  /** Path beginning with "/", used to build the canonical/OG URL. */
+  path?: string;
+  /** Extra JSON-LD objects to embed (Organization is always included). */
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  path = '/',
+  jsonLd = [],
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(path, SITE.url).href;
+const ogImage = new URL('/og.png', SITE.url).href;
+const fullTitle =
+  path === '/' ? `${SITE.name} · ${SITE.tagline}` : `${title} · ${SITE.name}`;
+
+// Organization JSON-LD is on every page; pages append SoftwareApplication,
+// BlogPosting, BreadcrumbList, HowTo, Product, etc.
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  description: SITE.description,
+  email: SITE.email,
+  sameAs: [] as string[],
+};
+const structured = [organization, ...jsonLd];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <Analytics />
+
+    <!-- Google tag (gtag.js). is:inline keeps Astro from bundling these into a
+         deferred ES module, which would strip the global `gtag` function. -->
+    <script
+      is:inline
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-H8Q7BWQVYM"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-H8Q7BWQVYM');
+    </script>
+
+    <!-- Google AdSense loader. is:inline keeps Astro from bundling it as a
+         module, which would break the global adsbygoogle queue. -->
+    <script
+      is:inline
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8187492565103899"
+      crossorigin="anonymous"></script>
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- OpenGraph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="theme-color" content="#0b2018" />
+    <!-- Icons: .ico is the path browsers auto-request (kills the /favicon.ico
+         404); the 512 PNG is the high-res primary; apple-touch is for iOS. -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Fonts: Hanken Grotesk (display) + Inter (body & data labels).
+         Self-hosted and optimized by Astro's Fonts API (see astro.config.mjs).
+         `preload` emits a <link rel="preload"> for the woff2 so the browser
+         fetches it early; @font-face uses `display: swap` by default. -->
+    <Font cssVariable="--font-hanken-grotesk" preload />
+    <Font cssVariable="--font-inter" preload />
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(structured)}
+    />
+  </head>
+  <body class="grain">
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

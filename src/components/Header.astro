@@ -1,0 +1,450 @@
+---
+import { SITE, NAV, CTA } from '../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+
+// Derive the in-page section id (e.g. "/#pricing" -> "pricing") so the
+// client scroll-spy can wire each link to its section without a second list.
+const sectionOf = (href: string) =>
+  href.includes('#') ? href.split('#')[1] : '';
+---
+
+<header class="site-header" data-header>
+  <div class="shell header-row">
+    <a href="/" class="brand" aria-label={SITE.name}>
+      <img
+        src="/logo-horizontal.png"
+        alt={SITE.name}
+        class="brand-logo"
+        width="150"
+        height="29"
+        loading="eager"
+        decoding="async"
+      />
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class:list={['nav-link', { active: isActive(item.href) }]}
+            data-section={sectionOf(item.href)}
+          >
+            {item.label}
+            {'soon' in item && item.soon && (
+              <span class="soon-badge">Soon</span>
+            )}
+          </a>
+        ))
+      }
+      <span class="nav-indicator" aria-hidden="true"></span>
+    </nav>
+
+    <div class="header-cta">
+      <a href={CTA.secondary.href} class="nav-link signin">{CTA.secondary.label}</a>
+      <a href={CTA.primary.href} class="btn btn-primary btn-sm cta">
+        <span class="cta-ping" aria-hidden="true"></span>
+        {CTA.primary.label}
+      </a>
+    </div>
+
+    <details class="mobile-menu">
+      <summary aria-label="Open menu">
+        <span class="bars"><i></i><i></i><i></i></span>
+      </summary>
+      <div class="mobile-panel panel">
+        {
+          NAV.map((item) => (
+            <a
+              href={item.href}
+              class:list={['mobile-link', { active: isActive(item.href) }]}
+              data-section={sectionOf(item.href)}
+            >
+              {item.label}
+              {'soon' in item && item.soon && (
+                <span class="soon-badge">Soon</span>
+              )}
+            </a>
+          ))
+        }
+        <a href={CTA.secondary.href} class="mobile-link">{CTA.secondary.label}</a>
+        <a href={CTA.primary.href} class="btn btn-primary">{CTA.primary.label}</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  /* The header is a transparent sticky shell; the visible chrome is a
+     floating rounded "island" (.header-row) inset from the top edges. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding-top: 14px;
+    transition: padding-top 0.3s ease;
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: 60px;
+    padding-inline: 10px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, #f8f8fc 72%, transparent);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    box-shadow: var(--shadow-sm);
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+  /* once scrolled, the island solidifies and lifts */
+  .site-header.is-scrolled {
+    padding-top: 8px;
+  }
+  .site-header.is-scrolled .header-row {
+    background: color-mix(in oklab, #f8f8fc 92%, transparent);
+    border-color: var(--color-line-strong);
+    box-shadow: var(--shadow);
+  }
+
+  /* ---- brand ---- */
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    margin-right: auto;
+    padding-left: 6px;
+  }
+  .brand-logo {
+    display: block;
+    height: 29px;
+    width: auto;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .brand:hover .brand-logo {
+    transform: translateY(-1px);
+  }
+
+  /* ---- primary nav rail ---- */
+  .nav {
+    display: none;
+    position: relative;
+    gap: 2px;
+    align-items: center;
+  }
+  .nav-link {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-bone-dim);
+    padding: 8px 15px;
+    border-radius: 999px;
+    transition: color 0.18s ease;
+  }
+  .nav-link:hover {
+    color: var(--color-bone);
+  }
+  .nav-link.active {
+    color: var(--color-signal-deep);
+  }
+  /* "Soon" tag for not-yet-live nav items (e.g. Pricing) */
+  .soon-badge {
+    margin-left: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-signal-deep);
+    background: color-mix(in oklab, var(--color-signal) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-signal) 30%, transparent);
+    padding: 2px 5px;
+    border-radius: 999px;
+    vertical-align: middle;
+  }
+  .mobile-link .soon-badge {
+    margin-left: 8px;
+  }
+  /* sliding pill highlight driven by scroll-spy (position set in JS) */
+  .nav-indicator {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 34px;
+    width: var(--w, 0px);
+    transform: translate(var(--x, 0px), -50%);
+    background: color-mix(in oklab, var(--color-signal) 13%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-signal) 22%, transparent);
+    border-radius: 999px;
+    opacity: 0;
+    transition:
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      width 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.2s ease;
+    pointer-events: none;
+  }
+  .nav-indicator.is-on {
+    opacity: 1;
+  }
+
+  /* ---- right cluster ---- */
+  .header-cta {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .signin {
+    color: var(--color-muted);
+  }
+  .signin:hover {
+    color: var(--color-bone);
+    background: transparent;
+  }
+  .btn-sm {
+    padding: 0.62em 1.05em;
+    font-size: 0.8rem;
+    margin-left: 6px;
+  }
+  /* radar "ping" dot on the primary CTA: echoes the logo */
+  .cta-ping {
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #fff;
+    flex: none;
+  }
+  .cta-ping::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #fff;
+    animation: header-cta-ping 2s ease-out infinite;
+  }
+  @keyframes header-cta-ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    70%,
+    100% {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+  }
+
+  /* ---- mobile ---- */
+  .mobile-menu {
+    margin-left: auto;
+    position: relative;
+  }
+  .mobile-menu summary {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+  }
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile-menu summary:hover {
+    border-color: var(--color-line-strong);
+  }
+  .bars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .bars i {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-bone);
+    transition:
+      transform 0.26s ease,
+      opacity 0.2s ease;
+  }
+  .mobile-menu[open] summary {
+    border-color: var(--color-line-strong);
+  }
+  .mobile-menu[open] .bars i:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .mobile-menu[open] .bars i:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-menu[open] .bars i:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .mobile-panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 12px);
+    width: min(84vw, 290px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px;
+    transform-origin: top right;
+    animation: panel-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.98);
+    }
+  }
+  .mobile-link {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: 0.96rem;
+    font-weight: 600;
+    padding: 11px 12px;
+    color: var(--color-bone-dim);
+    border-radius: var(--radius-sm);
+    transition:
+      background 0.16s ease,
+      color 0.16s ease;
+  }
+  .mobile-link:hover {
+    background: var(--color-surface-2);
+    color: var(--color-bone);
+  }
+  .mobile-link.active {
+    color: var(--color-signal-deep);
+    background: color-mix(in oklab, var(--color-signal) 8%, transparent);
+  }
+  .mobile-panel .btn {
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  /* On mobile the island's own padding overrides .shell's page gutter, so
+     it would otherwise sit flush against the screen edges. Inset the
+     transparent header to float the pill with the same 14px gap as the top. */
+  @media (max-width: 899px) {
+    .site-header {
+      padding-inline: 14px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .nav,
+    .header-cta {
+      display: flex;
+    }
+    .mobile-menu {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-ping::after {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Header behaviour: (1) condense on scroll, (2) scroll-spy that lights the
+  // current section's link and slides the underline indicator beneath it.
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const nav = document.querySelector<HTMLElement>('.nav');
+  const indicator = document.querySelector<HTMLElement>('.nav-indicator');
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('.nav-link[data-section]')
+  ).filter((l) => l.dataset.section);
+  const mobileLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('.mobile-link[data-section]')
+  );
+
+  // (1) Condense the header once the page leaves the very top.
+  if (header) {
+    const onScroll = () =>
+      header.classList.toggle('is-scrolled', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // (2) Scroll-spy.
+  const byId = new Map(links.map((l) => [l.dataset.section!, l]));
+  const sections = links
+    .map((l) => document.getElementById(l.dataset.section!))
+    .filter((el): el is HTMLElement => !!el);
+
+  let activeId: string | null = null;
+
+  function moveIndicator(link: HTMLAnchorElement | undefined) {
+    if (!nav || !indicator) return;
+    if (!link) {
+      indicator.classList.remove('is-on');
+      return;
+    }
+    const navRect = nav.getBoundingClientRect();
+    const rect = link.getBoundingClientRect();
+    indicator.style.setProperty('--x', `${rect.left - navRect.left}px`);
+    indicator.style.setProperty('--w', `${rect.width}px`);
+    indicator.classList.add('is-on');
+  }
+
+  function setActive(id: string | null) {
+    activeId = id;
+    for (const l of links) l.classList.toggle('active', l.dataset.section === id);
+    for (const l of mobileLinks)
+      l.classList.toggle('active', l.dataset.section === id);
+    moveIndicator(id ? byId.get(id) : undefined);
+  }
+
+  if (sections.length) {
+    // A thin band across the viewport's middle: the section crossing it wins.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        }
+      },
+      { rootMargin: '-48% 0px -48% 0px', threshold: 0 }
+    );
+    for (const s of sections) observer.observe(s);
+
+    // Keep the underline aligned if the layout reflows. Coalesce the burst
+    // of resize events into one measurement per frame.
+    let resizeRaf = 0;
+    window.addEventListener(
+      'resize',
+      () => {
+        cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+          if (activeId) moveIndicator(byId.get(activeId));
+        });
+      },
+      { passive: true }
+    );
+  }
+
+  // Close the mobile menu after tapping a link.
+  const details = document.querySelector<HTMLDetailsElement>('.mobile-menu');
+  if (details) {
+    details.querySelectorAll('a').forEach((a) =>
+      a.addEventListener('click', () => details.removeAttribute('open'))
+    );
+  }
+</script>

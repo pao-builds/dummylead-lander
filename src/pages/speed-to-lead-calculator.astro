@@ -1,0 +1,343 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { SITE } from '../data/site';
+
+const description =
+  'Free speed to lead calculator: estimate the revenue you lose every month to slow lead response. Enter your lead volume, close rates, and current speed to contact, then see what faster follow-up is worth.';
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Speed to lead calculator',
+      item: new URL('/speed-to-lead-calculator/', SITE.url).href,
+    },
+  ],
+};
+
+// The calculator itself is a free web tool; telling search and LLMs so helps
+// it surface for "speed to lead calculator" style queries.
+const webApp = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Speed to Lead Calculator',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  description,
+  url: new URL('/speed-to-lead-calculator/', SITE.url).href,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+};
+---
+
+<BaseLayout
+  title="Speed to Lead Calculator"
+  path="/speed-to-lead-calculator/"
+  description={description}
+  jsonLd={[breadcrumb, webApp]}
+>
+  <PageHeader eyebrow="Free tool" title="Speed to lead calculator">
+    Estimate how much revenue slow lead response costs you each month. Speed
+    to lead (also called speed to contact or lead response time) is the gap
+    between a lead arriving and the first real attempt to reach them, and it
+    is one of the highest-leverage numbers in sales.
+  </PageHeader>
+
+  <section class="section">
+    <div class="shell calc-grid">
+      <div class="panel panel-pad calc-inputs">
+        <span class="eyebrow">Your numbers</span>
+        <h2>What does your funnel look like?</h2>
+
+        <label for="leads">
+          New leads per month
+          <input type="number" id="leads" value="200" min="1" step="10" inputmode="numeric" />
+        </label>
+
+        <label for="dealValue">
+          Average revenue per closed deal ($)
+          <input type="number" id="dealValue" value="1500" min="1" step="100" inputmode="numeric" />
+        </label>
+
+        <label for="fastRate">
+          Close rate when a lead is contacted fast (%)
+          <input type="number" id="fastRate" value="10" min="0" max="100" step="0.5" inputmode="decimal" />
+        </label>
+
+        <label for="slowRate">
+          Close rate when a lead waits hours or days (%)
+          <input type="number" id="slowRate" value="4" min="0" max="100" step="0.5" inputmode="decimal" />
+        </label>
+
+        <label for="fastShare">
+          Share of leads currently contacted within 5 minutes
+          <span class="range-row">
+            <input type="range" id="fastShare" value="25" min="0" max="100" step="5" />
+            <output id="fastShareOut" for="fastShare">25%</output>
+          </span>
+        </label>
+      </div>
+
+      <div class="panel panel-pad calc-results">
+        <span class="eyebrow">The verdict</span>
+        <h2>What slow response costs you</h2>
+
+        <div class="result-block">
+          <span class="result-label">Deals lost to slow response, per month</span>
+          <span class="result-value" id="dealsLost">9</span>
+        </div>
+        <div class="result-block result-flag">
+          <span class="result-label">Revenue lost per month</span>
+          <span class="result-value" id="revMonth">$13,500</span>
+        </div>
+        <div class="result-block result-flag">
+          <span class="result-label">Revenue lost per year</span>
+          <span class="result-value" id="revYear">$162,000</span>
+        </div>
+        <div class="result-block result-signal">
+          <span class="result-label">Recovered monthly if 90% of leads got a fast first touch</span>
+          <span class="result-value" id="revRecovered">$11,700</span>
+        </div>
+
+        <p class="calc-note">
+          The math is simple and fully visible: leads that miss a fast first
+          touch close at your slow rate instead of your fast rate, and the
+          difference is the money left on the table. It is an estimate, not a
+          measurement; your real numbers depend on your market and your list.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <span class="eyebrow">Why minutes matter</span>
+      <h2 class="stats-title">The research behind the defaults</h2>
+      <div class="stats-grid">
+        <div class="panel panel-pad stat-card">
+          <span class="stat-big">100x</span>
+          <p>
+            The landmark 2007 Lead Response Management study (Dr. James
+            Oldroyd, with InsideSales.com) found the odds of making contact
+            with a lead were about 100 times higher when calling within 5
+            minutes versus 30 minutes.
+          </p>
+        </div>
+        <div class="panel panel-pad stat-card">
+          <span class="stat-big">21x</span>
+          <p>
+            The same study found the odds of qualifying a lead were 21 times
+            higher at 5 minutes versus 30. Note what it measured: odds of
+            qualifying, not closed revenue. Most marketing pages misquote this
+            one.
+          </p>
+        </div>
+        <div class="panel panel-pad stat-card">
+          <span class="stat-big">2007</span>
+          <p>
+            That anchor study is nearly two decades old, and almost every
+            vendor still leans on it. The honest takeaway holds up: intent is
+            perishable, reachability collapses fast, and the first company to
+            have a real conversation usually frames the decision.
+          </p>
+        </div>
+      </div>
+      <p class="stats-more">
+        For benchmarks and what a good follow-up cadence looks like, read
+        <a href="/blog/speed-to-lead-what-fast-follow-up-looks-like/">our guide
+        to speed-to-lead</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="panel panel-pad measure-cta">
+        <span class="eyebrow">Estimate vs. reality</span>
+        <h2>This calculator guesses. A seed lead measures.</h2>
+        <p>
+          Every number above depends on one input nobody actually knows: the
+          share of leads that really get a fast first touch. CRM timestamps
+          are self-reported, and reps log "contacted" at the moment convenient
+          for them. DummyLead plants a decoy seed lead in your own flow and
+          timestamps the real gap between arrival and the first call, text, or
+          email, so you can run this math on your true speed to contact.
+        </p>
+        <a href="/contact/" class="btn btn-primary">Measure your real number</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const usd = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  });
+
+  function recalc() {
+    const leads = Math.max(0, Number($('leads').value) || 0);
+    const dealValue = Math.max(0, Number($('dealValue').value) || 0);
+    const fastRate = Math.min(100, Math.max(0, Number($('fastRate').value) || 0)) / 100;
+    const slowRate = Math.min(100, Math.max(0, Number($('slowRate').value) || 0)) / 100;
+    const fastShare = Math.min(100, Math.max(0, Number($('fastShare').value) || 0)) / 100;
+
+    // Leads that miss the fast window close at the slow rate; the delta times
+    // deal value is the revenue given up to latency.
+    const delta = Math.max(0, fastRate - slowRate);
+    const slowLeads = leads * (1 - fastShare);
+    const dealsLost = slowLeads * delta;
+    const revMonth = dealsLost * dealValue;
+    const recoveredShare = Math.max(0, 0.9 - fastShare);
+    const revRecovered = leads * recoveredShare * delta * dealValue;
+
+    $('fastShareOut').textContent = `${Math.round(fastShare * 100)}%`;
+    $('dealsLost').textContent = (Math.round(dealsLost * 10) / 10).toLocaleString('en-US');
+    $('revMonth').textContent = usd.format(revMonth);
+    $('revYear').textContent = usd.format(revMonth * 12);
+    $('revRecovered').textContent = usd.format(revRecovered);
+  }
+
+  ['leads', 'dealValue', 'fastRate', 'slowRate', 'fastShare'].forEach((id) => {
+    $(id).addEventListener('input', recalc);
+  });
+  recalc();
+</script>
+
+<style>
+  .calc-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  @media (min-width: 880px) {
+    .calc-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .calc-inputs h2,
+  .calc-results h2,
+  .measure-cta h2 {
+    font-size: 1.6rem;
+    margin: 12px 0 18px;
+  }
+  .calc-inputs label {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--color-bone-dim);
+  }
+  .calc-inputs input[type='number'] {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    font: inherit;
+    font-weight: 500;
+    color: var(--color-bone);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 10px;
+  }
+  .calc-inputs input[type='number']:focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 1px;
+  }
+  .range-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .range-row input[type='range'] {
+    flex: 1;
+    accent-color: var(--color-signal);
+  }
+  .range-row output {
+    min-width: 3.2ch;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-bone);
+  }
+  .result-block {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--color-line-strong);
+  }
+  .result-label {
+    font-size: 0.92rem;
+    color: var(--color-bone-dim);
+    max-width: 30ch;
+  }
+  .result-value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.7rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .result-flag .result-value {
+    color: var(--color-flag);
+  }
+  .result-signal .result-value {
+    color: var(--color-signal-deep);
+  }
+  .calc-note {
+    margin-top: 18px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+  .stats-title {
+    font-size: 1.8rem;
+    margin: 14px 0 22px;
+  }
+  .stats-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 880px) {
+    .stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .stat-card .stat-big {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.4rem;
+    color: var(--color-signal-deep);
+    margin-bottom: 10px;
+  }
+  .stat-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-bone-dim);
+  }
+  .stats-more {
+    margin-top: 20px;
+    color: var(--color-bone-dim);
+  }
+  .stats-more a {
+    color: var(--color-signal-deep);
+    text-decoration: underline;
+  }
+  .measure-cta p {
+    max-width: 70ch;
+    line-height: 1.65;
+    color: var(--color-bone-dim);
+    margin-bottom: 22px;
+  }
+</style>

@@ -1,0 +1,523 @@
+---
+import { STEPS } from '../data/content';
+import SectionHeader from './SectionHeader.astro';
+
+// One line-icon per step, mapped by index. Stroke uses currentColor so the
+// chip's color (which flips on .is-active) recolors the whole glyph.
+const ICONS = [
+  // 01 plant a decoy: a sprout
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-8"/><path d="M12 13c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 12c3 0 5-2 5-5-3 0-5 2-5 5z"/></svg>',
+  // 02 drop it in: an arrow dropping into the flow
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v9"/><path d="M8.5 8.5 12 12l3.5-3.5"/><path d="M5 17h14"/><path d="M5 17v2.4M19 17v2.4"/></svg>',
+  // 03 catch every touch: a signal pulse
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 4 12 2.5-6H21"/></svg>',
+  // 04 read the verdict: a report with a check
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4"/><path d="M9 14l2 2 4-4"/></svg>',
+];
+---
+
+<section id="how-it-works" class="section">
+  <div class="shell">
+    <SectionHeader eyebrow="The method" title="How it works, in four steps">
+      You don’t change how you hand out leads. You just add one dummy lead and
+      watch how it gets treated when no one knows it’s a test.
+    </SectionHeader>
+
+    <!-- The "seed trail": an SVG snake path is generated from the measured node
+         positions (see <script>), drawn in on scroll while a seed token travels
+         along it and lights each step as it arrives. -->
+    <div class="trail" data-trail>
+      <svg
+        class="trail-svg"
+        data-trail-svg
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="trailGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color: var(--color-signal)"></stop>
+            <stop offset="0.55" style="stop-color: var(--color-signal)"></stop>
+            <stop offset="1" style="stop-color: var(--color-trust)"></stop>
+          </linearGradient>
+        </defs>
+        <!-- faint dotted "track" the seed will follow -->
+        <path class="trail-track" data-trail-track></path>
+        <!-- cobalt-to-sky line, revealed via stroke-dashoffset on scroll -->
+        <path class="trail-line" data-trail-line></path>
+        <!-- the traveling seed -->
+        <g class="trail-seed" data-trail-seed>
+          <circle class="seed-glow" r="14"></circle>
+          <circle class="seed-core" r="5.5"></circle>
+        </g>
+      </svg>
+
+      <ol class="steps">
+        {
+          STEPS.map((s, i) => (
+            <li
+              class="step"
+              data-step
+              data-side={i % 2 === 0 ? 'left' : 'right'}
+            >
+              <div class="step-node" data-node aria-hidden="true">
+                <span class="step-no">{s.no}</span>
+              </div>
+              <div class="step-card panel panel-pad">
+                <div class="step-head">
+                  <span
+                    class="step-icon"
+                    aria-hidden="true"
+                    set:html={ICONS[i]}
+                  />
+                  <h3 class="step-title">{s.title}</h3>
+                </div>
+                <p class="step-text">{s.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trail {
+    position: relative;
+    margin-top: clamp(40px, 5vw, 64px);
+  }
+
+  /* ---- the snake path layer ---- */
+  .trail-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .trail-track {
+    fill: none;
+    stroke: var(--color-line-strong);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 1 10;
+    opacity: 0.7;
+  }
+  .trail-line {
+    fill: none;
+    stroke: url(#trailGrad);
+    stroke-width: 3;
+    stroke-linecap: round;
+    filter: drop-shadow(
+      0 1px 6px color-mix(in oklab, var(--color-signal) 35%, transparent)
+    );
+  }
+  .trail-seed {
+    /* hidden until JS positions it (avoids a flash at 0,0 and a no-JS dot) */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .seed-glow {
+    fill: color-mix(in oklab, var(--color-signal) 26%, transparent);
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: seed-breathe 2.6s ease-in-out infinite;
+  }
+  .seed-core {
+    fill: var(--color-signal);
+    stroke: #fff;
+    stroke-width: 1.5;
+  }
+  @keyframes seed-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.35);
+      opacity: 0.35;
+    }
+  }
+  /* Stop the loop when the trail is scrolled out of view. */
+  .trail.is-paused .seed-glow {
+    animation-play-state: paused;
+  }
+
+  /* ---- step list ---- */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: clamp(22px, 4vw, 40px);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    column-gap: 18px;
+    align-items: start;
+  }
+
+  /* node: the circular anchor the snake threads through */
+  .step-node {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.45s ease,
+      background 0.45s ease,
+      box-shadow 0.45s ease;
+  }
+  .step-no {
+    font-family: var(--font-code);
+    font-weight: 600;
+    font-size: 0.98rem;
+    letter-spacing: -0.02em;
+    color: var(--color-muted);
+    transition: color 0.45s ease;
+  }
+  /* a ring that pings outward when the seed reaches the node */
+  .step-node::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--color-signal);
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  .step-card {
+    max-width: 56ch;
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  /* icon chip: a visual aid for what the step does, color-linked to the node */
+  .step-icon {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius);
+    color: var(--color-signal-deep);
+    background: color-mix(in oklab, var(--color-signal) 8%, var(--color-surface));
+    border: 1px solid color-mix(in oklab, var(--color-signal) 22%, var(--color-line));
+    transition:
+      background 0.45s ease,
+      color 0.45s ease,
+      border-color 0.45s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .step-icon :global(svg) {
+    width: 21px;
+    height: 21px;
+  }
+  .step-title {
+    font-size: 1.18rem;
+    margin: 0;
+  }
+  .step-text {
+    color: var(--color-bone-dim);
+    line-height: 1.6;
+    font-size: 0.96rem;
+    margin: 14px 0 0;
+  }
+
+  /* ---- desktop: alternate nodes to the outer edges so the path snakes ---- */
+  @media (min-width: 880px) {
+    .steps {
+      gap: clamp(30px, 4.5vw, 52px);
+    }
+    .step {
+      grid-template-columns: 52px minmax(0, 440px);
+      column-gap: 30px;
+      align-items: center;
+      justify-content: start;
+    }
+    .step[data-side='right'] {
+      grid-template-columns: minmax(0, 440px) 52px;
+      justify-content: end;
+    }
+    .step[data-side='right'] .step-node {
+      order: 2;
+    }
+    .step[data-side='right'] .step-card {
+      order: 1;
+    }
+  }
+
+  /* ---- scroll-driven states (added only when JS + motion are live) ---- */
+  .trail.is-live .step-card {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .trail.is-live .step.is-active .step-card {
+    opacity: 1;
+    transform: none;
+  }
+
+  .step.is-active .step-node {
+    background: var(--color-signal);
+    border-color: var(--color-signal);
+    transform: scale(1.06);
+    box-shadow:
+      var(--shadow-sm),
+      0 8px 22px -8px color-mix(in oklab, var(--color-signal) 70%, transparent);
+  }
+  .step.is-active .step-no {
+    color: #fff;
+  }
+  .step.is-active .step-icon {
+    background: var(--color-signal);
+    color: #fff;
+    border-color: var(--color-signal);
+    transform: scale(1.04);
+  }
+  .trail.is-live .step.is-active .step-node::after {
+    animation: node-ping 0.7s ease-out;
+  }
+  @keyframes node-ping {
+    0% {
+      opacity: 0.7;
+      transform: scale(0.85);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trail.is-live .step-card {
+      opacity: 1;
+      transform: none;
+    }
+    .seed-glow {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  /**
+   * "Seed trail": a snake path generated from the live DOM, drawn in on scroll.
+   *
+   * The step cards are positioned by CSS (nodes alternate to the outer edges on
+   * desktop). We then measure each node's centre and build a smooth Catmull-Rom
+   * spline through them, so the path is always correct at any width. A single
+   * scroll-scrubbed value drives three things in lock-step:
+   *   1. the cobalt-to-sky line drawing in  (stroke-dashoffset)
+   *   2. the seed token sliding along it     (path.getPointAtLength)
+   *   3. each step lighting up as the seed arrives (.is-active)
+   *
+   * No-JS and reduced-motion always end up with every card visible and the full
+   * path drawn: the motion is pure enhancement.
+   */
+  const trail = document.querySelector<HTMLElement>('[data-trail]');
+  const svg = document.querySelector<SVGSVGElement>('[data-trail-svg]');
+  const track = document.querySelector<SVGPathElement>('[data-trail-track]');
+  const line = document.querySelector<SVGPathElement>('[data-trail-line]');
+  const seed = document.querySelector<SVGGElement>('[data-trail-seed]');
+
+  if (trail && svg && track && line && seed) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    const steps = Array.from(
+      trail.querySelectorAll<HTMLElement>('[data-step]')
+    );
+    const nodes = Array.from(
+      trail.querySelectorAll<HTMLElement>('[data-node]')
+    );
+
+    type Pt = { x: number; y: number };
+    type Sample = { len: number; x: number; y: number };
+
+    let total = 0;
+    let samples: Sample[] = [];
+    let nodeAt: number[] = []; // each node's progress (0..1) along the path
+
+    // Smooth spline through all points (Catmull-Rom to cubic bezier).
+    const toPath = (p: Pt[]): string => {
+      if (p.length < 2) return '';
+      const d = [`M ${p[0].x.toFixed(1)} ${p[0].y.toFixed(1)}`];
+      for (let i = 0; i < p.length - 1; i++) {
+        const p0 = p[i - 1] ?? p[i];
+        const p1 = p[i];
+        const p2 = p[i + 1];
+        const p3 = p[i + 2] ?? p2;
+        const c1x = p1.x + (p2.x - p0.x) / 6;
+        const c1y = p1.y + (p2.y - p0.y) / 6;
+        const c2x = p2.x - (p3.x - p1.x) / 6;
+        const c2y = p2.y - (p3.y - p1.y) / 6;
+        d.push(
+          `C ${c1x.toFixed(1)} ${c1y.toFixed(1)} ` +
+            `${c2x.toFixed(1)} ${c2y.toFixed(1)} ` +
+            `${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`
+        );
+      }
+      return d.join(' ');
+    };
+
+    // Find the path length closest to a given point (for node thresholds).
+    const lenNearest = (x: number, y: number): number => {
+      let best = Infinity;
+      let bestLen = 0;
+      for (const s of samples) {
+        const d = (s.x - x) ** 2 + (s.y - y) ** 2;
+        if (d < best) {
+          best = d;
+          bestLen = s.len;
+        }
+      }
+      return bestLen;
+    };
+
+    // Number of evenly-spaced (by arc length) samples taken along the path.
+    const N = 320;
+
+    const build = () => {
+      const W = trail.clientWidth;
+      const H = trail.clientHeight;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+      const base = trail.getBoundingClientRect();
+      const pts: Pt[] = nodes.map((n) => {
+        const r = n.getBoundingClientRect();
+        return {
+          x: r.left - base.left + r.width / 2,
+          y: r.top - base.top + r.height / 2,
+        };
+      });
+
+      const d = toPath(pts);
+      track.setAttribute('d', d);
+      line.setAttribute('d', d);
+
+      total = line.getTotalLength();
+      line.style.strokeDasharray = `${total}`;
+      line.style.strokeDashoffset = `${total}`;
+
+      // Sample once, then map every node onto its progress along the path.
+      samples = [];
+      for (let i = 0; i <= N; i++) {
+        const len = (total * i) / N;
+        const pt = line.getPointAtLength(len);
+        samples.push({ len, x: pt.x, y: pt.y });
+      }
+      nodeAt = pts.map((p) => (total ? lenNearest(p.x, p.y) / total : 0));
+    };
+
+    // Seed position at progress p (0..1), interpolated from the cached samples
+    // instead of re-querying the SVG path each frame. samples are evenly spaced
+    // by arc length (index i ↔ progress i/N), so progress maps straight to an
+    // index. This removes the only per-scroll-frame layout read in this section.
+    const seedAt = (p: number): Pt => {
+      if (!samples.length) return { x: 0, y: 0 };
+      const t = Math.min(Math.max(p, 0), 1) * N;
+      const i0 = Math.floor(t);
+      const i1 = Math.min(i0 + 1, N);
+      const frac = t - i0;
+      const a = samples[i0];
+      const b = samples[i1];
+      return {
+        x: a.x + (b.x - a.x) * frac,
+        y: a.y + (b.y - a.y) * frac,
+      };
+    };
+
+    const apply = (p: number) => {
+      const drawn = total * p;
+      line.style.strokeDashoffset = `${total - drawn}`;
+      const pt = seedAt(p);
+      seed.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
+      steps.forEach((step, i) => {
+        // Light the step just before the seed physically reaches it.
+        step.classList.toggle('is-active', p + 0.02 >= nodeAt[i]);
+      });
+    };
+
+    if (reduceMotion) {
+      // Static, complete state: full path, all steps on, seed parked at the end.
+      build();
+      line.style.strokeDashoffset = '0';
+      steps.forEach((s) => s.classList.add('is-active'));
+      const end = line.getPointAtLength(total);
+      seed.setAttribute('transform', `translate(${end.x} ${end.y})`);
+      seed.style.opacity = '1';
+      const redraw = () => {
+        build();
+        line.style.strokeDashoffset = '0';
+        const e = line.getPointAtLength(total);
+        seed.setAttribute('transform', `translate(${e.x} ${e.y})`);
+      };
+      window.addEventListener('resize', redraw);
+      // Web fonts can shift the node positions after the first measure.
+      document.fonts?.ready.then(redraw);
+    } else {
+      trail.classList.add('is-live');
+      build();
+      apply(0);
+      seed.style.opacity = '1';
+
+      const st = ScrollTrigger.create({
+        trigger: trail,
+        start: 'top 72%',
+        end: 'bottom 78%',
+        scrub: true,
+        onUpdate: (self) => apply(self.progress),
+      });
+
+      // Rebuild geometry on resize, then re-place the seed at the current point.
+      const rebuild = () => {
+        build();
+        ScrollTrigger.refresh();
+        apply(st.progress);
+      };
+      let raf = 0;
+      window.addEventListener('resize', () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(rebuild);
+      });
+      // Web fonts can shift the node positions after the first measure.
+      document.fonts?.ready.then(rebuild);
+
+      // Pause the looping seed-glow breathe while the trail is off-screen.
+      if ('IntersectionObserver' in window) {
+        const vis = new IntersectionObserver(
+          ([entry]) =>
+            trail.classList.toggle('is-paused', !entry.isIntersecting),
+          { threshold: 0 }
+        );
+        vis.observe(trail);
+      }
+    }
+  }
+</script>

@@ -1,0 +1,165 @@
+---
+import { SITE, NAV, CTA, LEGAL_NAV } from '../data/site';
+import Logo from './Logo.astro';
+const year = 2026;
+---
+
+<footer class="site-footer on-navy">
+  <div class="shell">
+    <div class="foot-main">
+      <div class="foot-brand">
+        <a href="/" class="brand">
+          <Logo variant="white" size={34} />
+          <span class="brand-name">{SITE.name}</span>
+        </a>
+        <p class="foot-tag">{SITE.tagline}.</p>
+        <a href={CTA.primary.href} class="btn btn-primary foot-cta">
+          {CTA.primary.label}
+        </a>
+      </div>
+
+      <nav class="foot-cols" aria-label="Footer">
+        <div class="foot-col">
+          <h4>Product</h4>
+          {NAV.map((i) => <a href={i.href}>{i.label}</a>)}
+        </div>
+        <div class="foot-col">
+          <h4>Detect</h4>
+          <a href="/#lead-buyers">Lead resale</a>
+          <a href="/#partners">Partner follow-up</a>
+          <a href="/#employees">Rep performance</a>
+          <a href="/#compliance">Spam & attestation</a>
+        </div>
+        <div class="foot-col">
+          <h4>Company</h4>
+          <a href="/blog/">Blog</a>
+          <a href="/contact/">Contact</a>
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          <a href={CTA.secondary.href}>Sign in</a>
+        </div>
+      </nav>
+    </div>
+
+    <nav class="foot-legal" aria-label="Legal">
+      {LEGAL_NAV.map((i) => <a href={i.href}>{i.label}</a>)}
+    </nav>
+
+    <div class="foot-bottom">
+      <span class="foot-fine">© {year} {SITE.name}. All rights reserved.</span>
+      <span class="foot-fine foot-fine-mono">{SITE.domain}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: clamp(48px, 6vw, 80px);
+    padding: 0 0 36px;
+    background: var(--color-navy);
+    color: #d7e0ea;
+  }
+
+  /* ---- main ---- */
+  .foot-main {
+    display: grid;
+    gap: 44px;
+    grid-template-columns: 1fr;
+    padding-top: clamp(40px, 5vw, 56px);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .foot-tag {
+    color: #9fb0c2;
+    margin: 16px 0 20px;
+    max-width: 32ch;
+    line-height: 1.55;
+  }
+  .foot-cta {
+    align-self: flex-start;
+  }
+
+  .foot-cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .foot-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .foot-col h4 {
+    font-family: var(--font-code);
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #6f8298;
+    margin: 0 0 4px;
+  }
+  .foot-col a {
+    color: #b9c6d4;
+    font-size: 0.92rem;
+    transition: color 0.16s ease;
+  }
+  .foot-col a:hover {
+    color: #93c5fd;
+  }
+
+  /* ---- legal links ---- */
+  .foot-legal {
+    margin-top: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+  }
+  .foot-legal a {
+    font-family: var(--font-code);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: #8aa0b6;
+    transition: color 0.16s ease;
+  }
+  .foot-legal a:hover {
+    color: #93c5fd;
+  }
+
+  /* ---- bottom ---- */
+  .foot-bottom {
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .foot-fine {
+    font-size: 0.76rem;
+    color: #6f8298;
+  }
+  .foot-fine-mono {
+    font-family: var(--font-code);
+    letter-spacing: 0.04em;
+  }
+
+  @media (min-width: 820px) {
+    .foot-main {
+      grid-template-columns: 1.2fr 2fr;
+      align-items: start;
+    }
+    .foot-cols {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,194 @@
+---
+/**
+ * Shared chrome for legal pages (privacy, terms, refunds, acceptable use).
+ * Owns the prose styling and the cross-links between the four documents so
+ * each page only has to supply its own copy. Pages pass an `updated` date
+ * and the readable body goes in the default slot as plain HTML.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { LEGAL, LEGAL_NAV } from '../data/site';
+
+interface Props {
+  title: string;
+  eyebrow: string;
+  description: string;
+  path: string;
+  /** Short lede shown under the title. */
+  lede: string;
+}
+const { title, eyebrow, description, path, lede } = Astro.props;
+---
+
+<!--
+  noindex on every legal page: these carry the operator's name and contact
+  details, so we keep them out of search engines and (via robots.txt) out of
+  LLM training crawlers. They stay reachable by direct link for Stripe review
+  and for customers.
+-->
+<BaseLayout title={title} description={description} path={path} noindex={true}>
+  <PageHeader eyebrow={eyebrow} title={title}>{lede}</PageHeader>
+
+  <section class="section">
+    <div class="shell legal-wrap">
+      <article class="legal panel panel-pad">
+        <p class="legal-meta">
+          Effective date: <strong>{LEGAL.effectiveDate}</strong>
+        </p>
+        <slot />
+      </article>
+
+      <aside class="legal-aside">
+        <nav class="legal-nav panel panel-pad" aria-label="Legal documents">
+          <span class="eyebrow">Legal</span>
+          {
+            LEGAL_NAV.map((i) => (
+              <a
+                href={i.href}
+                class:list={['legal-link', { current: i.href === path }]}
+                aria-current={i.href === path ? 'page' : undefined}
+              >
+                {i.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="legal-contact panel panel-pad">
+          <span class="eyebrow">Questions</span>
+          <p>Privacy or legal requests go to a human, usually within one business day.</p>
+          <a href={`mailto:${LEGAL.contactEmail}`} class="mail">{LEGAL.contactEmail}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-wrap {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .legal-meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    margin: 0 0 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  /* ---- prose ---- */
+  .legal :global(h2) {
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    margin: 40px 0 12px;
+    scroll-margin-top: 90px;
+  }
+  .legal :global(h2:first-of-type) {
+    margin-top: 0;
+  }
+  .legal :global(h3) {
+    font-size: 1.05rem;
+    margin: 24px 0 8px;
+    color: var(--color-bone);
+  }
+  .legal :global(p),
+  .legal :global(li) {
+    color: var(--color-bone-dim);
+    line-height: 1.65;
+    font-size: 0.96rem;
+  }
+  .legal :global(p) {
+    margin: 0 0 14px;
+  }
+  .legal :global(ul) {
+    margin: 0 0 16px;
+    padding-left: 22px;
+  }
+  .legal :global(li) {
+    margin-bottom: 8px;
+  }
+  .legal :global(li)::marker {
+    color: var(--color-signal);
+  }
+  .legal :global(strong) {
+    color: var(--color-bone);
+    font-weight: 600;
+  }
+  .legal :global(a) {
+    color: var(--color-signal);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  /* Callout block for the high-stakes consent / compliance notices. */
+  .legal :global(.legal-callout) {
+    border: 1px solid var(--color-line-strong);
+    border-left: 3px solid var(--color-signal);
+    border-radius: var(--radius);
+    background: var(--color-surface-2);
+    padding: 16px 18px;
+    margin: 0 0 20px;
+  }
+  .legal :global(.legal-callout p:last-child) {
+    margin-bottom: 0;
+  }
+  .legal :global(.placeholder) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-signal);
+    background: color-mix(in oklab, var(--color-signal) 10%, transparent);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+  }
+
+  /* ---- aside ---- */
+  .legal-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .legal-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .legal-nav .eyebrow,
+  .legal-contact .eyebrow {
+    margin-bottom: 14px;
+  }
+  .legal-link {
+    font-size: 0.92rem;
+    color: var(--color-bone-dim);
+    padding: 6px 0;
+    transition: color 0.16s ease;
+  }
+  .legal-link:hover {
+    color: var(--color-bone);
+  }
+  .legal-link.current {
+    color: var(--color-signal);
+    font-weight: 600;
+  }
+  .legal-contact p {
+    color: var(--color-bone-dim);
+    line-height: 1.55;
+    font-size: 0.92rem;
+    margin: 0 0 14px;
+  }
+  .mail {
+    font-family: var(--font-mono);
+    color: var(--color-signal);
+    font-size: 0.92rem;
+  }
+
+  @media (min-width: 960px) {
+    .legal-wrap {
+      grid-template-columns: minmax(0, 1fr) 260px;
+    }
+    .legal-aside {
+      position: sticky;
+      top: 90px;
+    }
+  }
+</style>

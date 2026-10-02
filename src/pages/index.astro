@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import CallerReputation from '../components/CallerReputation.astro';
+import UseCases from '../components/UseCases.astro';
+import Pricing from '../components/Pricing.astro';
+import FAQ from '../components/FAQ.astro';
+import { SITE } from '../data/site';
+import { STEPS, PRICING, FAQS } from '../data/content';
+
+// Build per-tier Offers from the same PRICING data the page renders, so the
+// structured data can never drift from what visitors actually see. Prices are
+// per active seed per month.
+const offers = PRICING.tiers.map((tier) => ({
+  '@type': 'Offer',
+  name: tier.name,
+  description: `${tier.forWho}. ${tier.seeds}.`,
+  priceCurrency: 'USD',
+  price: tier.price.replace(/[^0-9.]/g, ''),
+  priceSpecification: {
+    '@type': 'UnitPriceSpecification',
+    price: tier.price.replace(/[^0-9.]/g, ''),
+    priceCurrency: 'USD',
+    unitText: 'active seed per month',
+  },
+}));
+
+// SoftwareApplication tells search + LLMs this is a product/tool. The
+// AggregateOffer plus per-tier Offers expose the real pricing model.
+const softwareApp = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: SITE.name,
+  // Familiar terms people use for this category, so search and LLMs associate
+  // DummyLead with the concepts visitors actually search for.
+  alternateName: [
+    'Secret shopper for sales leads',
+    'Seed lead monitoring',
+    'Decoy lead monitoring',
+    'Lead resale detection',
+  ],
+  keywords:
+    'secret shopper for leads, mystery shopper sales team, seed lead, decoy lead, test lead, lead resale detection, monitor sales rep follow-up, audit a lead buyer, speed to contact, speed to lead measurement, lead response time',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  description: SITE.description,
+  url: SITE.url,
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'USD',
+    lowPrice: Math.min(
+      ...PRICING.tiers.map((t) => Number(t.price.replace(/[^0-9.]/g, ''))),
+    ).toString(),
+    highPrice: Math.max(
+      ...PRICING.tiers.map((t) => Number(t.price.replace(/[^0-9.]/g, ''))),
+    ).toString(),
+    offerCount: offers.length,
+    offers,
+  },
+};
+
+// HowTo mirrors the four on-page steps. Search engines and LLMs use this to
+// summarize how the product works in a single, structured answer.
+const howTo = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How DummyLead monitors your leads',
+  description:
+    'How to plant a seed lead, place it in a real lead flow, and read the verdict on how your leads are handled.',
+  step: STEPS.map((s) => ({
+    '@type': 'HowToStep',
+    position: Number(s.no),
+    name: s.title,
+    text: s.body,
+  })),
+};
+
+// FAQPage mirrors the visible FAQ section, built from the same FAQS data so the
+// structured answers can never drift from what visitors read on the page.
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+---
+
+<BaseLayout title="Home" path="/" jsonLd={[softwareApp, howTo, faqPage]}>
+  <Hero />
+  <HowItWorks />
+  <CallerReputation />
+  <UseCases />
+  <FAQ />
+  <Pricing />
+</BaseLayout>
