@@ -2,12 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import HowItWorks from '../components/HowItWorks.astro';
-import CallerReputation from '../components/CallerReputation.astro';
 import UseCases from '../components/UseCases.astro';
 import Pricing from '../components/Pricing.astro';
-import FAQ from '../components/FAQ.astro';
 import { SITE } from '../data/site';
-import { STEPS, PRICING, FAQS } from '../data/content';
+import { STEPS, PRICING } from '../data/content';
 
 // Build per-tier Offers from the same PRICING data the page renders, so the
 // structured data can never drift from what visitors actually see. Prices are
@@ -76,27 +74,11 @@ const howTo = {
   })),
 };
 
-// FAQPage mirrors the visible FAQ section, built from the same FAQS data so the
-// structured answers can never drift from what visitors read on the page.
-const faqPage = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQS.map((item) => ({
-    '@type': 'Question',
-    name: item.q,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: item.a,
-    },
-  })),
-};
 ---
 
-<BaseLayout title="Home" path="/" jsonLd={[softwareApp, howTo, faqPage]}>
+<BaseLayout title="Home" path="/" jsonLd={[softwareApp, howTo]}>
   <Hero />
   <HowItWorks />
-  <CallerReputation />
   <UseCases />
-  <FAQ />
   <Pricing />
 </BaseLayout>

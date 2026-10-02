@@ -18,8 +18,8 @@ export const SITE = {
   appUrl: 'https://app.dummylead.com',
   tagline: 'A secret shopper for your sales leads',
   description:
-    'DummyLead is a secret shopper for your sales leads. It plants decoy "seed" leads, each with its own phone and email, into your lead flow, then logs every call, text, and email, so you can prove whether buyers, partners, and reps are working your leads or quietly ignoring, mishandling, or reselling them.',
-  email: 'hello@dummylead.com',
+    'Ever wonder if your leads actually get called? DummyLead slips decoy "seed" leads into your lead flow and logs every call, text, and email, so you\'ll know who\'s working them, who\'s ignoring them, and who\'s reselling them.',
+  email: 'admin@nextcallclub.com',
 } as const;
 
 export const NAV = [
@@ -31,7 +31,8 @@ export const NAV = [
 export const CTA = {
   primary: {
     label: 'Start monitoring',
-    href: `${SITE.appUrl}/register`,
+    // Sign-up isn't open yet; swap back to `${SITE.appUrl}/register` at launch.
+    href: '/coming-soon/',
   },
   secondary: {
     label: 'Sign in',
@@ -42,7 +43,7 @@ export const CTA = {
 
 /**
  * Legal entity facts, in one place. These feed every legal page
- * (privacy, terms, refunds, acceptable use) so a single edit updates
+ * (privacy, terms, refunds) so a single edit updates
  * all of them.
  */
 export const LEGAL = {
@@ -59,10 +60,15 @@ export const LEGAL = {
   effectiveDate: 'October 1, 2026',
 } as const;
 
+export const LEGAL_URLS = {
+  privacy: 'https://nextcallclub.com/privacy-policy',
+  terms: 'https://nextcallclub.com/msa',
+  refunds: 'https://nextcallclub.com/fulfillment-policy',
+} as const;
+
 /** Footer + cross-links for the legal pages. */
 export const LEGAL_NAV = [
-  { label: 'Privacy Policy', href: '/privacy/' },
-  { label: 'Terms of Service', href: '/terms/' },
-  { label: 'Refund & Cancellation', href: '/refunds/' },
-  { label: 'Acceptable Use', href: '/acceptable-use/' },
+  { label: 'Privacy Policy', href: LEGAL_URLS.privacy },
+  { label: 'Terms of Service', href: LEGAL_URLS.terms },
+  { label: 'Refund & Cancellation', href: LEGAL_URLS.refunds },
 ] as const;

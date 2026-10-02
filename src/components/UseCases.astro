@@ -1,603 +1,371 @@
 ---
 import { USE_CASES } from '../data/content';
 import SectionHeader from './SectionHeader.astro';
+import CallerReputation from './CallerReputation.astro';
+import FlankExhibit from './FlankExhibit.astro';
 
-const check =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+// Timeline glyphs (stroke uses currentColor so each dot tints its icon).
+const icons = {
+  call: '<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>',
+  text: '<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12" /></svg>',
+  voicemail: '<svg viewBox="0 0 24 24"><circle cx="6.5" cy="12" r="3.5" /><circle cx="17.5" cy="12" r="3.5" /><path d="M6.5 15.5h11" /></svg>',
+  alert: '<svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>',
+};
+
+// Illustrative activity log for one dummy lead. Each row shows what DummyLead
+// captures for that contact; the last row is someone the lead was never sent to.
+type Tag = { k?: string; v: string; flag?: boolean };
+const LOG: { kind: keyof typeof icons; title: string; from: string; at: string; quote?: string; tags: Tag[]; flag?: boolean }[] = [
+  {
+    kind: 'call',
+    title: 'Call',
+    from: 'Apex Solar',
+    at: '47 sec',
+    tags: [{ k: 'Caller ID', v: 'APEX SOLAR' }, { k: 'Carrier', v: 'Verizon' }, { v: 'Recorded 3:12' }],
+  },
+  {
+    kind: 'text',
+    title: 'Text',
+    from: 'Apex Solar',
+    at: '4 min',
+    quote: '“Hi Jane, about your quote…”',
+    tags: [],
+  },
+  {
+    kind: 'voicemail',
+    title: 'Voicemail',
+    from: 'Apex Solar',
+    at: '2 hrs',
+    tags: [{ v: '0:38 saved' }, { v: 'Transcribed' }],
+  },
+  {
+    kind: 'alert',
+    title: 'Call',
+    from: '(415) 555-0199',
+    at: 'Next day',
+    flag: true,
+    tags: [{ k: 'Caller ID', v: 'None shown' }, { k: 'Carrier', v: 'Bandwidth' }, { v: 'Not someone you sent it to', flag: true }],
+  },
+];
 
 interface Props {
   showHeader?: boolean;
 }
 const { showHeader = true } = Astro.props;
+
+// Lead activity exhibit first, then caller reputation (CallerReputation.astro).
+const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
 ---
 
 <section id="use-cases" class="section">
   <div class="shell">
     {
       showHeader && (
-        <SectionHeader title="One dummy lead, four kinds of proof">
-          The same dummy lead tells a very different story depending on whose
-          hands it ends up in. Here is what the proof looks like.
+        <SectionHeader title="Watch what happens to your leads">
+          Whether you sell leads, buy them, or pass them to a sales team, a
+          dummy lead shows you what actually happens next.
         </SectionHeader>
       )
     }
 
     <div class="cases" data-cases>
-      {
-        USE_CASES.map((u, i) => (
-          <article id={u.slug} class={`exhibit tone-${u.tone}`} style={`--i:${i}`}>
-            <div class="exhibit-stage">
-              {u.slug === 'lead-buyers' && (
-                <svg viewBox="0 0 320 200" data-anim="resale" aria-label="One exclusive lead reaching a second, unauthorized caller">
-                  <path class="s-line" d="M52 100 146 74" data-authline />
-                  <path class="s-line flag" d="M160 70 C214 80 222 150 256 150" data-leakpath />
-                  <g>
-                    <circle class="s-node" cx="40" cy="100" r="15" />
-                    <text class="s-glyph" x="40" y="105">★</text>
-                    <text class="s-cap" x="40" y="130">Your lead</text>
-                  </g>
-                  <g>
-                    <circle class="s-node ok s-pop" cx="160" cy="70" r="18" data-pop="buyer" />
-                    <text class="s-glyph" x="160" y="75">A</text>
-                    <text class="s-cap" x="160" y="42">Acme Buyer</text>
-                    <text class="s-badge ok s-pop" x="160" y="101" data-badge="auth">AUTHORIZED</text>
-                  </g>
-                  <g>
-                    <circle class="s-node bad s-pop" cx="256" cy="150" r="18" data-pop="unknown" />
-                    <text class="s-glyph bad" x="256" y="155">?</text>
-                    <text class="s-cap" x="256" y="182">Unknown number</text>
-                    <text class="s-badge bad s-pop" x="256" y="124" data-badge="resale">RESALE</text>
-                  </g>
-                  <circle class="s-dot" r="6" cx="40" cy="100" data-dot />
-                  <circle class="s-dot flag" r="5" cx="256" cy="150" data-leak />
-                </svg>
-              )}
-
-              {u.slug === 'partners' && (
-                <svg viewBox="0 0 320 200" data-anim="sla" aria-label="A first response arriving hours past the promised time">
-                  <circle class="s-track" cx="160" cy="100" r="58" />
-                  <circle class="s-arc" cx="160" cy="100" r="58" data-arc transform="rotate(-90 160 100)" />
-                  <line class="s-tick" x1="160" y1="36" x2="160" y2="48" transform="rotate(43 160 100)" />
-                  <text class="s-cap dim" x="214" y="52">15m</text>
-                  <text class="s-clock" x="160" y="100" data-clock>2h 14m</text>
-                  <text class="s-cap" x="160" y="120">elapsed</text>
-                  <text class="s-badge amber s-pop" x="160" y="184" data-badge="late">1 LATE ATTEMPT</text>
-                </svg>
-              )}
-
-              {u.slug === 'employees' && (
-                <svg viewBox="0 0 320 200" data-anim="worked" aria-label="A rep dialing a lead fast across six attempts">
-                  <path class="s-line" d="M80 84 224 84" />
-                  <g>
-                    <circle class="s-node" cx="62" cy="84" r="16" />
-                    <text class="s-glyph" x="62" y="89">R</text>
-                    <text class="s-cap" x="62" y="114">Your rep</text>
-                  </g>
-                  <g>
-                    <circle class="s-node ok s-pop" cx="242" cy="84" r="19" data-pop="lead" />
-                    <text class="s-glyph ok" x="242" y="90" data-leadglyph>✓</text>
-                    <text class="s-cap" x="242" y="116">Lead</text>
-                  </g>
-                  <text class="s-badge ok s-pop" x="242" y="56" data-badge="worked">WORKED</text>
-                  <text class="s-cap" x="160" y="150">6 of 6 attempts</text>
-                  <g data-adots>
-                    <circle class="s-adot" cx="92" cy="166" r="6" />
-                    <circle class="s-adot" cx="119" cy="166" r="6" />
-                    <circle class="s-adot" cx="146" cy="166" r="6" />
-                    <circle class="s-adot" cx="173" cy="166" r="6" />
-                    <circle class="s-adot" cx="200" cy="166" r="6" />
-                    <circle class="s-adot" cx="227" cy="166" r="6" />
-                  </g>
-                  <circle class="s-dot" r="6" cx="62" cy="84" data-dot />
-                </svg>
-              )}
-
-              {u.slug === 'compliance' && (
-                <svg viewBox="0 0 320 200" data-anim="verified" aria-label="A call passing a carrier check and landing as a branded, verified number">
-                  <text class="s-badge trust s-pop" x="160" y="38" data-badge="branded">BRANDED CALLER ID</text>
-                  <rect class="s-card" x="72" y="62" width="176" height="46" rx="11" data-card />
-                  <text class="s-num" x="160" y="90">+1 (628) 555-0114</text>
-                  <rect class="s-scan" x="72" y="62" width="16" height="46" rx="3" data-scan />
-                  <g class="s-pop" data-shield>
-                    <circle class="s-stamp" cx="246" cy="64" r="14" />
-                    <path class="s-check" d="M240 64 l4 4 l8 -9" />
-                  </g>
-                  <g>
-                    <rect class="s-seg" x="118" y="150" width="28" height="22" rx="6" data-seg="C" />
-                    <text class="s-seglbl dim" x="132" y="166" data-seglbl="C">C</text>
-                    <rect class="s-seg" x="150" y="150" width="28" height="22" rx="6" data-seg="B" />
-                    <text class="s-seglbl dim" x="164" y="166" data-seglbl="B">B</text>
-                    <rect class="s-seg on" x="182" y="150" width="28" height="22" rx="6" data-seg="A" />
-                    <text class="s-seglbl" x="196" y="166" data-seglbl="A">A</text>
-                  </g>
-                  <text class="s-badge trust s-pop" x="160" y="192" data-badge="grade">GRADE A · VERIFIED</text>
-                </svg>
-              )}
-            </div>
-
-            <div class="exhibit-meta">
-              <div class="case-content">
-                <span class="case-aud">{u.audience}</span>
-                <h3 class="case-title">{u.title}</h3>
-                <p class="case-prob">{u.problem}</p>
-                <ul class="case-points">
-                  {u.points.map((p) => (
-                    <li>
-                      <span class="pt-check" aria-hidden="true" set:html={check} />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
+      <FlankExhibit
+        id={lead.slug}
+        audience={lead.audience}
+        title={lead.title}
+        problem={lead.problem}
+        points={lead.points}
+        tone="signal"
+      >
+          <div class="log" data-log>
+            <p class="log-sr">
+              Illustrative example. Jane D., a dummy lead, gets a recorded call from Apex Solar after
+              47 seconds, a text at 4 minutes, a voicemail at 2 hours, and the next day a call from
+              an unknown number she was never sent to.
+            </p>
+            <div class="log-head" aria-hidden="true">
+              <span class="log-hat"><img src="/dummylead-hat.svg" alt="" width="40" height="22" /></span>
+              <div>
+                <strong>Jane D.</strong>
+                <span>Dummy lead activity</span>
               </div>
             </div>
-          </article>
-        ))
-      }
+
+            <ol class="log-list" aria-hidden="true">
+              {
+                LOG.map((row, i) => (
+                  <li class:list={['log-row', { flag: row.flag }]}>
+                    {i < LOG.length - 1 && <span class="log-conn" />}
+                    <span class="log-dot" set:html={icons[row.kind]} />
+                    <div class="log-body">
+                      <p class="log-title">
+                        <span>
+                          <strong>{row.title}</strong> from {row.from}
+                        </span>
+                        <time>{row.at}</time>
+                      </p>
+                      {row.quote && <p class="log-quote">{row.quote}</p>}
+                      {row.tags.length > 0 && (
+                        <div class="log-tags">
+                          {row.tags.map((t) => (
+                            <span class:list={['log-tag', { flag: t.flag }]}>
+                              {t.k && <b>{t.k}</b>}
+                              {t.v}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
+      </FlankExhibit>
     </div>
+
+    <CallerReputation />
   </div>
 </section>
 
 <style>
-  .tone-signal {
-    --tone: var(--color-signal);
-    --tone-ink: var(--color-signal-deep);
-  }
-  .tone-amber {
-    --tone: var(--color-amber);
-    --tone-ink: var(--color-amber);
-  }
-  .tone-flag {
-    --tone: var(--color-flag);
-    --tone-ink: var(--color-flag);
-  }
-  .tone-trust {
-    --tone: var(--color-trust);
-    --tone-ink: var(--color-trust);
-  }
-
-  /* ================= layout: free-floating exhibits ================= */
   .cases {
-    margin-top: clamp(36px, 5vw, 56px);
-    display: flex;
-    flex-direction: column;
-  }
-  .exhibit {
-    --tone: var(--color-signal);
-    --tone-ink: var(--color-signal-deep);
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(18px, 4vw, 36px);
-    align-items: center;
-    max-width: 1060px;
-    width: 100%;
-    margin-inline: auto;
-    padding-block: clamp(34px, 6vw, 60px);
-  }
-  .exhibit + .exhibit {
-    border-top: 1px solid var(--color-line);
-  }
-  @media (min-width: 820px) {
-    .exhibit {
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(40px, 6vw, 80px);
-    }
-    .exhibit:nth-of-type(even) .exhibit-stage {
-      order: 2;
-    }
+    margin-top: clamp(24px, 3vw, 36px);
   }
 
-  .exhibit-stage {
+  /* ================= activity timeline (free-floating, no card) ================= */
+  .log {
+    position: relative;
+    /* fixed (not min()) so the auto-width center column sizes to it */
+    width: 360px;
+    max-width: 100%;
+  }
+  .log-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .log-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .log-hat {
     display: grid;
     place-items: center;
-    min-height: 220px;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-ink-2);
   }
-  .exhibit-stage svg {
-    width: 100%;
-    max-width: 360px;
-    height: auto;
+  .log-hat img {
+    width: 30px;
+    height: 17px;
+  }
+  .log-head strong {
     display: block;
-    overflow: visible;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-navy);
+    line-height: 1.2;
+  }
+  .log-head span {
+    font-size: 0.78rem;
+    color: var(--color-muted);
   }
 
-  /* ================= case content ================= */
-  .case-aud {
-    font-family: var(--font-body);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--tone-ink);
-  }
-  .case-title {
-    font-size: clamp(1.5rem, 2.6vw, 1.9rem);
-    margin: 12px 0 14px;
-  }
-  .case-prob {
-    color: var(--color-muted);
-    line-height: 1.6;
-    font-size: 0.98rem;
-    margin: 0 0 18px;
-    max-width: 48ch;
-  }
-  .case-points {
+  .log-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 11px;
+    gap: 16px;
   }
-  .case-points li {
-    display: flex;
-    align-items: flex-start;
-    gap: 11px;
-    color: var(--color-bone);
-    line-height: 1.5;
-    font-size: 0.95rem;
+  .log-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 12px;
+    align-items: start;
   }
-  .pt-check {
-    flex: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    margin-top: 1px;
+  /* connector from this dot down to the next one */
+  .log-conn {
+    position: absolute;
+    left: 17px;
+    top: 38px;
+    bottom: -14px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--color-line-strong);
+    transform-origin: top;
+  }
+  .log-dot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    color: var(--tone-ink);
-    background: color-mix(in oklab, var(--tone) 13%, transparent);
+    color: var(--color-signal);
+    background: var(--color-surface);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-signal) 28%, var(--color-line));
   }
-  .pt-check :global(svg) {
-    width: 11px;
-    height: 11px;
-  }
-
-  /* ================= SVG scene primitives ================= */
-  .s-line {
+  .log-dot :global(svg) {
+    width: 17px;
+    height: 17px;
     fill: none;
-    stroke: var(--color-line-strong);
-    stroke-width: 2;
-    stroke-linecap: round;
-  }
-  .s-line.dash {
-    stroke-dasharray: 4 5;
-  }
-  .s-line.flag {
-    stroke: var(--color-flag);
-  }
-  .s-node {
-    fill: var(--color-surface);
-    stroke: var(--color-line-strong);
-    stroke-width: 2;
-  }
-  .s-node.ok {
-    stroke: var(--color-signal);
-  }
-  .s-node.bad {
-    stroke: var(--color-flag);
-  }
-  .s-glyph {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 14px;
-    fill: var(--color-bone);
-    text-anchor: middle;
-  }
-  .s-glyph.bad {
-    fill: var(--color-flag);
-  }
-  .s-glyph.ok {
-    fill: var(--color-signal-deep);
-  }
-  .s-glyph.trust {
-    fill: #fff;
-  }
-  .s-cap {
-    font-family: var(--font-body);
-    font-size: 10px;
-    letter-spacing: 0.04em;
-    fill: var(--color-muted);
-    text-anchor: middle;
-  }
-  .s-cap.dim {
-    fill: var(--color-faint);
-  }
-  .s-badge {
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-anchor: middle;
-  }
-  .s-badge.ok {
-    fill: var(--color-signal-deep);
-  }
-  .s-badge.bad {
-    fill: var(--color-flag);
-  }
-  .s-badge.amber {
-    fill: var(--color-amber);
-  }
-  .s-badge.trust {
-    fill: var(--color-trust);
-  }
-  .s-dot {
-    fill: var(--color-signal);
-  }
-  .s-dot.flag {
-    fill: var(--color-flag);
-  }
-  .s-dot.amber {
-    fill: var(--color-amber);
-  }
-  .s-dot.trust {
-    fill: var(--color-trust);
-  }
-  .s-adot {
-    fill: var(--color-signal);
-  }
-  /* stopwatch */
-  .s-track {
-    fill: none;
-    stroke: var(--color-line);
-    stroke-width: 6;
-  }
-  .s-arc {
-    fill: none;
-    stroke: var(--color-amber);
-    stroke-width: 6;
-    stroke-linecap: round;
-    stroke-dasharray: 365;
-  }
-  .s-tick {
-    stroke: var(--color-bone);
-    stroke-width: 2.5;
-  }
-  .s-clock {
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 19px;
-    fill: var(--color-bone);
-    text-anchor: middle;
-  }
-  /* verified card / scan / segments / stamp */
-  .s-card {
-    fill: var(--color-surface-2);
-    stroke: var(--color-line-strong);
-    stroke-width: 1.5;
-  }
-  .s-num {
-    font-family: var(--font-body);
-    font-size: 12px;
-    fill: var(--color-bone);
-    text-anchor: middle;
-  }
-  .s-scan {
-    fill: color-mix(in oklab, var(--color-trust) 55%, transparent);
-    opacity: 0;
-  }
-  .s-seg {
-    fill: var(--color-surface-2);
-    stroke: var(--color-line);
-    stroke-width: 1.5;
-    transition:
-      fill 0.25s ease,
-      stroke 0.25s ease;
-  }
-  .s-seg.on {
-    fill: var(--color-trust);
-    stroke: var(--color-trust);
-  }
-  .s-seglbl {
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 11px;
-    fill: #fff;
-    text-anchor: middle;
-    transition: fill 0.25s ease;
-  }
-  .s-seglbl.dim {
-    fill: var(--color-muted);
-  }
-  .s-stamp {
-    fill: var(--color-trust);
-  }
-  .s-check {
-    fill: none;
-    stroke: #fff;
-    stroke-width: 2.6;
-    stroke-linecap: round;
+    stroke: currentColor;
+    stroke-width: 1.8;
     stroke-linejoin: round;
+    stroke-linecap: round;
   }
-  /* elements the timeline scales/rotates need their own transform box */
-  .s-pop,
-  .s-adot,
-  .s-dot {
-    transform-box: fill-box;
-    transform-origin: center;
+  .log-row.flag .log-dot {
+    color: var(--color-flag);
+    background: color-mix(in oklab, var(--color-flag) 10%, var(--color-surface));
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-flag) 35%, var(--color-line));
+  }
+  .log-body {
+    min-width: 0;
+    padding-top: 2px;
+  }
+  .log-title {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.86rem;
+    color: var(--color-bone-dim);
+    line-height: 1.35;
+  }
+  .log-title strong {
+    color: var(--color-navy);
+    font-weight: 600;
+  }
+  .log-title time {
+    flex: none;
+    font-size: 0.74rem;
+    color: var(--color-muted);
+  }
+  .log-quote {
+    margin: 4px 0 0;
+    font-size: 0.82rem;
+    color: var(--color-bone-dim);
+  }
+  .log-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 7px;
+  }
+  .log-tag {
+    display: inline-flex;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: var(--color-bone-dim);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+  }
+  .log-tag b {
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+  .log-tag.flag {
+    font-weight: 600;
+    color: var(--color-flag);
+    background: color-mix(in oklab, var(--color-flag) 9%, var(--color-surface));
+    border-color: color-mix(in oklab, var(--color-flag) 30%, var(--color-line));
   }
 
-  /* armed (hidden) states the intro animates from */
-  .cases.is-anim .exhibit-meta,
-  .cases.is-anim .exhibit-stage {
-    opacity: 0;
-  }
 </style>
 
 <script>
   import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+  import { flank } from '../scripts/flank';
 
   /**
-   * Each case is a free-floating exhibit that acts out its own story with its
-   * own motion: the resale lead clones and a rose dot rides a MotionPath curve
-   * to an unknown caller; the SLA stopwatch arc sweeps hours past its promise;
-   * the worked lead takes a fast burst of dials; the verified call gets scanned
-   * and stamped Grade A. An intro plays once on enter; the scene loops only
-   * while on screen. Reduced-motion / no-JS shows the finished diagrams static.
+   * The activity log fills in like a live lead: each contact lands in turn,
+   * its connector draws down to the next, and its detail tags (caller ID,
+   * carrier, recording) pop in. As each row lands, the side points it
+   * illustrates light up (FlankExhibit). The points slide in once on enter;
+   * the log loops only while on screen. Reduced-motion / no-JS shows the
+   * finished log static with every point lit.
    */
-  const root = document.querySelector<HTMLElement>('#use-cases [data-cases]');
-  if (root && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
-    root.classList.add('is-anim');
+  const ex = document.querySelector<HTMLElement>('#use-cases #lead-buyers');
+  const log = ex?.querySelector<HTMLElement>('[data-log]');
 
-    const HEX = { amber: '#d97706', flag: '#e11d48' };
+  // Which of lead.points (content.ts) each log row illustrates, in LOG order,
+  // then the points lit while the finished log holds.
+  const ROW_LIT = [
+    [0, 1], // call: timestamped, caller ID + carrier
+    [0, 2], // text at 4 min: how fast
+    [0, 2], // voicemail at 2 hrs: how often
+    [1, 3], // unknown number: caller ID, someone you didn't send it to
+  ];
+  const END_LIT = [4]; // the whole log is the record
 
-    // One-time intro for an exhibit: fade the animation and copy in together.
-    const intro = (ex: HTMLElement) => {
-      const stage = ex.querySelector('.exhibit-stage');
-      const meta = ex.querySelector('.exhibit-meta');
-      const tl = gsap.timeline({ paused: true });
-      tl.fromTo(stage, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' }, 0);
-      tl.fromTo(meta, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.05);
-      return tl;
-    };
+  if (ex && log) {
+    const pts = flank(ex);
 
-    // Looping scene, one distinct motion per case.
-    const buildScene = (ex: HTMLElement) => {
-      const svg = ex.querySelector<SVGElement>('[data-anim]');
-      if (!svg) return null;
-      const q = (s: string) => svg.querySelector(s);
-      const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 0.8 });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      pts.all();
+    } else {
+      const rows = gsap.utils.toArray<HTMLElement>('.log-row', log);
+      const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 0.6 });
 
-      if (svg.dataset.anim === 'resale') {
-        const dot = q('[data-dot]')!;
-        const leak = q('[data-leak]')!;
-        const auth = q('[data-badge="auth"]')!;
-        const resale = q('[data-badge="resale"]')!;
-        const authLine = svg.querySelector<SVGPathElement>('[data-authline]')!;
-        const leakPath = svg.querySelector<SVGPathElement>('[data-leakpath]')!;
-        const authLen = authLine.getTotalLength();
-        const leakLen = leakPath.getTotalLength();
-        tl.set(dot, { attr: { cx: 40, cy: 100 }, opacity: 1 })
-          .set(leak, { attr: { cx: 0, cy: 0 }, x: 0, y: 0, scale: 0, opacity: 0 })
-          .set([auth, resale], { opacity: 0, scale: 0.5 })
-          .set(authLine, { strokeDasharray: authLen, strokeDashoffset: authLen, opacity: 1 })
-          .set(leakPath, { strokeDasharray: leakLen, strokeDashoffset: leakLen, opacity: 1 })
-          // the lead travels to the authorized buyer, drawing the line behind it
-          .to(dot, { attr: { cx: 160, cy: 70 }, duration: 0.8, ease: 'power2.inOut' })
-          .to(authLine, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, '<')
-          .to(auth, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' })
-          // a copy pinches off and leaks down the curve, drawing its trail
-          .to(leak, { motionPath: { path: leakPath, align: leakPath, alignOrigin: [0.5, 0.5] }, duration: 0.95, ease: 'power1.inOut' }, '+=0.3')
-          .set(leak, { opacity: 1 }, '<')
-          .to(leak, { scale: 1, duration: 0.3, ease: 'power2.out' }, '<')
-          .to(leakPath, { strokeDashoffset: 0, duration: 0.95, ease: 'power1.inOut' }, '<')
-          .to(resale, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' })
-          .to({}, { duration: 1.5 })
-          .to([dot, leak, auth, resale, authLine, leakPath], { opacity: 0, duration: 0.4 });
-      } else if (svg.dataset.anim === 'sla') {
-        const arc = q('[data-arc]')!;
-        const clock = q('[data-clock]')!;
-        const late = q('[data-badge="late"]')!;
-        const C = 365;
-        const fmt = (m: number) =>
-          m < 60 ? `${m}m` : `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m`;
-        tl.set(arc, { strokeDashoffset: C, stroke: HEX.amber })
-          .set(late, { opacity: 0, scale: 0.5 })
-          .call(() => {
-            clock.textContent = '0m';
-          })
-          .to(arc, {
-            strokeDashoffset: C * 0.07,
-            duration: 2.6,
-            ease: 'none',
-            onUpdate: () => {
-              const off = Number(gsap.getProperty(arc, 'strokeDashoffset'));
-              clock.textContent = fmt(Math.round((1 - off / C) * 134));
-            },
-          })
-          .to(arc, { stroke: HEX.flag, duration: 1.7, ease: 'none' }, '<+=0.6')
-          .call(() => {
-            clock.textContent = '2h 14m';
-          })
-          .to(late, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' })
-          .to({}, { duration: 1.4 })
-          .to(late, { opacity: 0, duration: 0.4 });
-      } else if (svg.dataset.anim === 'worked') {
-        const dot = q('[data-dot]')!;
-        const leadGlyph = q('[data-leadglyph]')!;
-        const worked = q('[data-badge="worked"]')!;
-        const adots = gsap.utils.toArray<Element>('.s-adot', svg);
-        tl.set(dot, { attr: { cx: 62, cy: 84 }, opacity: 1 })
-          .set(adots, { opacity: 0.25 })
-          .set(leadGlyph, { opacity: 0, scale: 0.6 })
-          .set(worked, { opacity: 0, scale: 0.6 });
-        // the rep dials the lead six times, fast
-        for (let i = 0; i < 6; i++) {
-          tl.to(dot, { attr: { cx: 242 }, duration: 0.16, ease: 'power1.in' })
-            .to(adots[i], { opacity: 1, duration: 0.24, ease: 'power2.out' }, '>-0.03')
-            .to(dot, { attr: { cx: 62 }, duration: 0.12, ease: 'power1.out' });
+      tl.set(rows, { autoAlpha: 0, y: 10 });
+      tl.set(log.querySelectorAll('.log-conn'), { scaleY: 0 });
+      tl.set(log.querySelectorAll('.log-tag'), { autoAlpha: 0 });
+
+      rows.forEach((row, i) => {
+        const at = 0.3 + i * 1.4;
+        tl.call(pts.light, [ROW_LIT[i] ?? []], at);
+        tl.to(row, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, at);
+        tl.fromTo(
+          row.querySelector('.log-dot'),
+          { scale: 0.6 },
+          { scale: 1, duration: 0.45, ease: 'back.out(2.4)' },
+          at
+        );
+        const tags = row.querySelectorAll('.log-tag');
+        if (tags.length) {
+          tl.fromTo(
+            tags,
+            { autoAlpha: 0, scale: 0.85 },
+            { autoAlpha: 1, scale: 1, duration: 0.3, stagger: 0.09, ease: 'back.out(2)' },
+            at + 0.3
+          );
         }
-        tl.to(dot, { opacity: 0, duration: 0.2 })
-          .to(leadGlyph, { opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out' }, '-=0.05')
-          .to(worked, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' }, '-=0.15')
-          .to({}, { duration: 1.3 })
-          .to(worked, { opacity: 0, duration: 0.4 })
-          .to(adots, { opacity: 0.25, duration: 0.3 }, '<');
-      } else if (svg.dataset.anim === 'verified') {
-        const scan = q('[data-scan]')!;
-        const shield = q('[data-shield]')!;
-        const card = q('[data-card]')!;
-        const grade = q('[data-badge="grade"]')!;
-        const branded = q('[data-badge="branded"]')!;
-        const NEUTRAL = '#c2cde0';
-        const TRUST = '#8b5cf6';
-        const setSeg = (l: string, on: boolean) => {
-          q(`[data-seg="${l}"]`)!.classList.toggle('on', on);
-          q(`[data-seglbl="${l}"]`)!.classList.toggle('dim', !on);
-        };
-        tl.set(scan, { attr: { x: 72 }, opacity: 0 })
-          .set([grade, branded], { opacity: 0, scale: 0.5 })
-          .set(shield, { opacity: 0, scale: 0.4, rotate: -12 })
-          .set(card, { stroke: NEUTRAL })
-          .call(() => {
-            setSeg('A', false);
-            setSeg('B', false);
-            setSeg('C', false);
-          })
-          // scan sweeps across the number
-          .to(scan, { opacity: 1, duration: 0.15 })
-          .to(scan, { attr: { x: 232 }, duration: 0.95, ease: 'power1.inOut' })
-          .to(scan, { opacity: 0, duration: 0.2 })
-          // attestation climbs C -> B -> A
-          .call(() => setSeg('C', true))
-          .call(() => { setSeg('C', false); setSeg('B', true); }, [], '+=0.22')
-          .call(() => { setSeg('B', false); setSeg('A', true); }, [], '+=0.22')
-          // card verifies + check stamps at the corner
-          .to(card, { stroke: TRUST, duration: 0.3 }, '<')
-          .to(shield, { opacity: 1, scale: 1, rotate: 0, duration: 0.45, ease: 'back.out(2.4)' }, '<')
-          .to(grade, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, '-=0.12')
-          .to(branded, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, '-=0.16')
-          .to({}, { duration: 1.6 })
-          .to([scan, shield, grade, branded], { opacity: 0, duration: 0.4 })
-          .to(card, { stroke: NEUTRAL, duration: 0.3 }, '<');
-      }
-      return tl;
-    };
-
-    const exhibits = gsap.utils.toArray<HTMLElement>('.exhibit', root);
-    exhibits.forEach((ex) => {
-      const introTL = intro(ex);
-      const sceneTL = buildScene(ex);
-      let introduced = false;
-      ScrollTrigger.create({
-        trigger: ex,
-        start: 'top 82%',
-        end: 'bottom 18%',
-        onToggle: (self) => {
-          if (self.isActive) {
-            if (!introduced) {
-              introTL.play();
-              introduced = true;
-            }
-            sceneTL?.play();
-          } else {
-            sceneTL?.pause();
-          }
-        },
+        const conn = row.querySelector('.log-conn');
+        if (conn) tl.to(conn, { scaleY: 1, duration: 0.5, ease: 'power1.inOut' }, at + 0.55);
       });
-    });
+
+      // Hold the finished log, then clear it for the next loop.
+      tl.call(pts.light, [END_LIT], '+=0.6');
+      tl.to({}, { duration: 2.6 });
+      tl.to(rows, { autoAlpha: 0, duration: 0.4 });
+
+      let introduced = false;
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return tl.pause();
+          if (introduced) return tl.play();
+          introduced = true;
+          pts.enter(() => tl.play());
+        },
+        { threshold: 0.3 }
+      );
+      pts.arm();
+      io.observe(log);
+    }
   }
 </script>

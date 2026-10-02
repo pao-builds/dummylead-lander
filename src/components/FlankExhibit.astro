@@ -1,0 +1,230 @@
+---
+/**
+ * Centered exhibit: heading across the top, a centerpiece (default slot) in
+ * the middle, and the check points split down both sides of it. On wide
+ * screens each point is wired to the centerpiece so a script can light the
+ * points that match what the centerpiece is showing (see scripts/flank.ts).
+ * On narrow screens it collapses to heading, centerpiece, then a check list.
+ *
+ * Used by the lead-activity exhibit (UseCases.astro) and the caller-reputation
+ * exhibit (CallerReputation.astro).
+ */
+interface Props {
+  id: string;
+  audience: string;
+  title: string;
+  problem: string;
+  points: string[];
+  tone: 'signal' | 'trust';
+  divider?: boolean;
+}
+const { id, audience, title, problem, points, tone, divider = false } = Astro.props;
+
+// First half on the left, the rest on the right.
+const half = Math.ceil(points.length / 2);
+const sides = [
+  { side: 'left', points: points.slice(0, half), offset: 0 },
+  { side: 'right', points: points.slice(half), offset: half },
+];
+
+const check =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+---
+
+<article id={id} class:list={['fx', `tone-${tone}`, { divider }]} data-flank>
+  <header class="fx-head">
+    <span class="fx-aud">{audience}</span>
+    <h3 class="fx-title">{title}</h3>
+    <p class="fx-prob">{problem}</p>
+  </header>
+
+  {
+    sides.map(({ side, points, offset }) => (
+      <ul class={`fx-side fx-side-${side}`}>
+        {points.map((p, i) => (
+          <li class="fx-point" data-point={offset + i}>
+            <span class="fx-wire" aria-hidden="true">
+              <span class="fx-wire-fill" />
+            </span>
+            <span class="fx-check" aria-hidden="true" set:html={check} />
+            <span class="fx-point-text">{p}</span>
+          </li>
+        ))}
+      </ul>
+    ))
+  }
+
+  <div class="fx-stage">
+    <slot />
+  </div>
+</article>
+
+<style>
+  .tone-signal {
+    --tone: var(--color-signal);
+    --tone-ink: var(--color-signal-deep);
+  }
+  .tone-trust {
+    --tone: var(--color-trust);
+    --tone-ink: var(--color-trust);
+  }
+
+  .fx {
+    display: grid;
+    grid-template-areas: 'head' 'stage' 'left' 'right';
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    row-gap: clamp(24px, 4vw, 40px);
+    padding-block: clamp(32px, 4vw, 56px);
+  }
+  .fx.divider {
+    border-top: 1px solid var(--color-line);
+  }
+  .fx-head {
+    grid-area: head;
+    text-align: center;
+    max-width: 40rem;
+  }
+  .fx-side-left { grid-area: left; }
+  .fx-side-right { grid-area: right; }
+  .fx-stage {
+    grid-area: stage;
+    display: grid;
+    place-items: center;
+    width: 100%;
+  }
+
+  .fx-aud {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tone-ink);
+  }
+  .fx-title {
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+    margin: 10px 0 12px;
+  }
+  .fx-prob {
+    color: var(--color-muted);
+    line-height: 1.6;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  /* ---- points ---- */
+  .fx-side {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 26rem;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  /* On narrow screens both sides read as one list. */
+  .fx .fx-side-right {
+    margin-top: calc(14px - clamp(24px, 4vw, 40px));
+  }
+  .fx-point {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--color-bone);
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .fx-check {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--tone-ink);
+    box-shadow: 0 6px 14px -6px color-mix(in oklab, var(--tone) 70%, transparent);
+  }
+  .fx-check :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+  .fx-wire {
+    display: none;
+  }
+
+  /* Keep in sync with WIDE in scripts/flank.ts. */
+  @media (min-width: 1000px) {
+    .fx {
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-areas:
+        'head head head'
+        'left stage right';
+      column-gap: 0;
+      align-items: stretch;
+    }
+    .fx .fx-side-right {
+      margin-top: 0;
+    }
+    .fx-side {
+      max-width: none;
+      justify-content: space-evenly;
+      gap: 0;
+    }
+    .fx-point-text {
+      flex: 0 1 auto;
+      max-width: 17rem;
+    }
+    /* Left points read right-to-left toward the centerpiece. */
+    .fx-side-left .fx-point {
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+    .fx-stage {
+      padding-inline: 12px;
+    }
+
+    /* Wire: faint track from the check to the centerpiece, with a fill
+       that draws in while that point is lit. Fixed length so every check
+       sits the same distance from the centerpiece; points pack toward it
+       (flex-start, which row-reverse flips to the right on the left side). */
+    .fx-wire {
+      display: block;
+      position: relative;
+      flex: none;
+      width: 5.5rem;
+      height: 1px;
+      background: var(--color-line-strong);
+    }
+    /* tuck the check end of the wire under the badge */
+    .fx-side-left .fx-wire { margin-left: -14px; }
+    .fx-side-right .fx-wire { margin-right: -14px; }
+    /* end dot where the wire meets the centerpiece */
+    .fx-wire::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: -2.5px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-line-strong);
+    }
+    .fx-side-left .fx-wire::before { right: 0; }
+    .fx-side-right .fx-wire::before { left: 0; }
+    .fx-wire-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--tone-ink);
+      transform: scaleX(0);
+    }
+    .fx-side-left .fx-wire-fill { transform-origin: left; }
+    .fx-side-right .fx-wire-fill { transform-origin: right; }
+  }
+</style>

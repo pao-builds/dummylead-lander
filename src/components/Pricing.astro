@@ -16,8 +16,7 @@ const ctaFor = (kind: 'start' | 'talk') =>
     <div class="tiers">
       {
         PRICING.tiers.map((t) => (
-          <article class:list={['tier', { featured: t.featured }]}>
-            {t.featured && <span class="tier-flag">Most popular</span>}
+          <article class="tier">
             <header class="tier-head">
               <h3 class="tier-name">{t.name}</h3>
               <p class="tier-for">{t.forWho}</p>
@@ -31,7 +30,7 @@ const ctaFor = (kind: 'start' | 'talk') =>
 
             <a
               href={ctaFor(t.cta).href}
-              class:list={['btn', t.featured ? 'btn-primary' : 'btn-ghost', 'tier-cta']}
+              class="btn btn-primary tier-cta"
             >
               {ctaFor(t.cta).label}
             </a>
@@ -40,10 +39,6 @@ const ctaFor = (kind: 'start' | 'talk') =>
       }
     </div>
 
-    <p class="tier-foot">
-      Figures shown are indicative. You’ll always see exact per-seed rates
-      before anything bills, and you can add or retire seeds anytime.
-    </p>
   </div>
 </section>
 
@@ -72,34 +67,6 @@ const ctaFor = (kind: 'start' | 'talk') =>
     padding: clamp(24px, 3vw, 32px);
     box-shadow: var(--shadow-sm);
   }
-  /* The featured tier is the one bold move: lifted, accented, white CTA. */
-  .tier.featured {
-    border-color: var(--color-signal);
-    box-shadow:
-      var(--shadow),
-      0 22px 48px -24px color-mix(in oklab, var(--color-signal) 55%, transparent);
-  }
-  @media (min-width: 820px) {
-    .tier.featured {
-      transform: translateY(-12px);
-    }
-  }
-  .tier-flag {
-    position: absolute;
-    top: -11px;
-    left: clamp(24px, 3vw, 32px);
-    font-family: var(--font-body);
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #fff;
-    background: var(--color-signal);
-    padding: 4px 10px;
-    border-radius: 999px;
-    box-shadow: 0 6px 16px -6px color-mix(in oklab, var(--color-signal) 70%, transparent);
-  }
-
   .tier-name {
     font-size: 1.3rem;
     margin: 0;
@@ -150,12 +117,4 @@ const ctaFor = (kind: 'start' | 'talk') =>
     width: 100%;
   }
 
-  .tier-foot {
-    margin: clamp(28px, 4vw, 40px) auto 0;
-    max-width: 56ch;
-    text-align: center;
-    color: var(--color-muted);
-    font-size: 0.88rem;
-    line-height: 1.6;
-  }
 </style>

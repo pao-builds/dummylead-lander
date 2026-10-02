@@ -3,7 +3,7 @@ interface Props {
   title: string;
   align?: 'left' | 'center';
 }
-const { title, align = 'left' } = Astro.props;
+const { title, align = 'center' } = Astro.props;
 ---
 
 <div class:list={['sec-head', align]}>

@@ -37,9 +37,9 @@
 
 ## Pricing
 Billed per concurrent active seed identity, monthly. The per-seed rate drops as the customer scales, and only live seeds count toward the bill.
-- Solo: $8.99 per seed / mo, 1-4 active seeds. For spot-checking a single source or partner.
-- Team: $6.99 per seed / mo, 5-14 active seeds. For watching a sales floor or several partners.
-- Publishers: $5.49 per seed / mo, 15+ active seeds. For publishers managing lead distribution at volume.
+- Solo: $12.99 per seed / mo, 1-4 active seeds. For spot-checking a single source or partner.
+- Team: $9.99 per seed / mo, 5-14 active seeds. For watching a sales floor or several partners.
+- Publishers: $7.99 per seed / mo, 15+ active seeds. For publishers managing lead distribution at volume.
 Recording, transcription, and SMS capture are included with every seed. Customers can scale up or down anytime, with the matching tier rate applied automatically and prorated.
 
 ## Writing (in-depth articles)

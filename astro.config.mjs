@@ -15,7 +15,9 @@ const SITE_ORIGIN = 'https://www.dummylead.com';
 
 // Keep the legal/compliance pages out of the sitemap. They are noindex, so we
 // don't advertise them to search engines; they remain reachable by direct link (footer + Stripe).
-const LEGAL_PATHS = ['/privacy/', '/terms/', '/refunds/', '/acceptable-use/'];
+const LEGAL_PATHS = ['/privacy/', '/terms/', '/refunds/'];
+// Placeholder page behind "Start monitoring" until sign-up opens (also noindex).
+const HIDDEN_PATHS = [...LEGAL_PATHS, '/coming-soon/'];
 
 export default defineConfig({
   site: SITE_ORIGIN,
@@ -52,7 +54,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
-        !LEGAL_PATHS.some((p) => page === `${SITE_ORIGIN}${p}`),
+        !HIDDEN_PATHS.some((p) => page === `${SITE_ORIGIN}${p}`),
     }),
   ],
   vite: {

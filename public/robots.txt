@@ -1,7 +1,7 @@
 # DummyLead robots policy.
 #
 # Marketing pages: crawl and cite freely, we want to be found and referenced.
-# Legal/compliance pages (/privacy, /terms, /refunds, /acceptable-use) carry
+# Legal/compliance pages (/privacy, /terms, /refunds) carry
 # the operator's name and contact details, so they are kept out of search
 # results (via noindex meta tags) and out of AI training crawls (the Disallow
 # rules below). They remain reachable by direct link for customers and for
@@ -20,83 +20,71 @@ Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: ChatGPT-User
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: anthropic-ai
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: Claude-Web
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: CCBot
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: Bytespider
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: Amazonbot
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 User-agent: Meta-ExternalAgent
 Allow: /
 Disallow: /privacy/
 Disallow: /terms/
 Disallow: /refunds/
-Disallow: /acceptable-use/
 
 Sitemap: https://www.dummylead.com/sitemap-index.xml

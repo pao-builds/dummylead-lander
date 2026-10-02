@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CTA } from '../data/site';
+
+// Where "Start monitoring" (CTA.primary) lands until sign-up opens in the app.
+---
+
+<BaseLayout title="Coming soon" path="/coming-soon/" noindex={true}>
+  <section class="cs section">
+    <div class="shell cs-inner">
+      <img class="cs-hat" src="/dummylead-hat.svg" alt="" width="64" height="35" />
+      <h1 class="cs-title">Coming soon</h1>
+      <p class="cs-msg">
+        DummyLead isn’t open for sign-ups yet. Want early access? Get in touch
+        and we’ll let you know as soon as it’s ready.
+      </p>
+      <div class="cs-actions">
+        <a href={CTA.demo.href} class="btn btn-primary">Contact us</a>
+        <a href="/" class="btn btn-ghost">Back to home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cs-inner {
+    text-align: center;
+    max-width: 46ch;
+    margin-inline: auto;
+    padding-block: clamp(48px, 10vw, 120px);
+  }
+  .cs-hat {
+    display: block;
+    width: 64px;
+    height: auto;
+    margin-inline: auto;
+  }
+  .cs-title {
+    font-size: clamp(2.6rem, 7vw, 4rem);
+    line-height: 1.05;
+    margin: 22px 0 0;
+    white-space: nowrap;
+  }
+  .cs-msg {
+    margin: 18px auto 0;
+    color: var(--color-bone-dim);
+    line-height: 1.6;
+    font-size: 1.05rem;
+  }
+  .cs-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+</style>

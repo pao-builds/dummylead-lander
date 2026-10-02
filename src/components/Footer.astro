@@ -23,8 +23,6 @@ const year = 2026;
         <div class="foot-col">
           <h4>Detect</h4>
           <a href="/#lead-buyers">Lead resale</a>
-          <a href="/#partners">Partner follow-up</a>
-          <a href="/#employees">Rep performance</a>
           <a href="/#compliance">Spam & attestation</a>
         </div>
         <div class="foot-col">
@@ -37,23 +35,26 @@ const year = 2026;
       </nav>
     </div>
 
-    <nav class="foot-legal" aria-label="Legal">
-      {LEGAL_NAV.map((i) => <a href={i.href}>{i.label}</a>)}
-    </nav>
-
     <div class="foot-bottom">
       <span class="foot-fine">© {year} {SITE.name}. All rights reserved.</span>
-      <span class="foot-fine foot-fine-domain">{SITE.domain}</span>
+      <nav class="foot-legal" aria-label="Legal">
+        {LEGAL_NAV.map((i) => <a href={i.href}>{i.label}</a>)}
+      </nav>
     </div>
   </div>
 </footer>
 
 <style>
+  /* Footer text tones are tints of the brand sky hue (198), so they read as
+     part of the navy rather than as neutral greys laid on top of it. */
   .site-footer {
+    --foot-text: hsl(198 35% 84%);
+    --foot-dim: hsl(198 22% 66%);
+    --foot-label: hsl(198 45% 62%);
     margin-top: clamp(48px, 6vw, 80px);
-    padding: 0 0 36px;
+    padding: 0 0 32px;
     background: var(--color-navy);
-    color: #d7e0ea;
+    color: var(--foot-text);
   }
 
   /* ---- main ---- */
@@ -61,16 +62,33 @@ const year = 2026;
     display: grid;
     gap: 44px;
     grid-template-columns: 1fr;
-    padding-top: clamp(40px, 5vw, 56px);
+    padding-top: clamp(48px, 6vw, 72px);
+    padding-bottom: clamp(40px, 5vw, 56px);
+  }
+  .foot-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
   .foot-tag {
-    color: #9fb0c2;
-    margin: 16px 0 20px;
-    max-width: 32ch;
+    color: var(--foot-dim);
+    font-size: 0.92rem;
     line-height: 1.55;
+    margin: 18px 0 22px;
+    max-width: 30ch;
   }
+  /* The site's primary button is navy, which vanishes on the navy footer.
+     Invert it here: white fill, navy label. */
   .foot-cta {
-    align-self: flex-start;
+    background: #ffffff;
+    border-color: #ffffff;
+    color: var(--color-navy);
+    box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+  .foot-cta:hover {
+    background: var(--color-ink-2);
+    border-color: var(--color-ink-2);
+    box-shadow: 0 14px 28px -12px rgba(0, 0, 0, 0.55);
   }
 
   .foot-cols {
@@ -81,66 +99,58 @@ const year = 2026;
   .foot-col {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 10px;
   }
   .foot-col h4 {
     font-family: var(--font-body);
-    font-size: 0.66rem;
-    letter-spacing: 0.2em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #6f8298;
-    margin: 0 0 4px;
+    color: var(--foot-label);
+    margin: 0 0 6px;
   }
   .foot-col a {
-    color: #b9c6d4;
-    font-size: 0.92rem;
+    color: var(--foot-text);
+    font-size: 0.9rem;
     transition: color 0.16s ease;
   }
   .foot-col a:hover {
-    color: #93c5fd;
+    color: #ffffff;
   }
 
-  /* ---- legal links ---- */
-  .foot-legal {
-    margin-top: 44px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 22px;
-  }
-  .foot-legal a {
-    font-family: var(--font-body);
-    font-size: 0.74rem;
-    letter-spacing: 0.04em;
-    color: #8aa0b6;
-    transition: color 0.16s ease;
-  }
-  .foot-legal a:hover {
-    color: #93c5fd;
-  }
-
-  /* ---- bottom ---- */
+  /* ---- bottom bar: copyright + legal on one line ---- */
   .foot-bottom {
-    margin-top: 22px;
-    padding-top: 22px;
+    padding-top: 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 14px 28px;
     justify-content: space-between;
     align-items: center;
   }
   .foot-fine {
-    font-size: 0.76rem;
-    color: #6f8298;
+    font-size: 0.8rem;
+    color: var(--foot-dim);
   }
-  .foot-fine-domain {
-    font-family: var(--font-body);
-    letter-spacing: 0.04em;
+  .foot-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+  }
+  .foot-legal a {
+    font-size: 0.8rem;
+    color: var(--foot-dim);
+    transition: color 0.16s ease;
+  }
+  .foot-legal a:hover {
+    color: #ffffff;
   }
 
   @media (min-width: 820px) {
     .foot-main {
-      grid-template-columns: 1.2fr 2fr;
+      grid-template-columns: 1fr 1.6fr;
       align-items: start;
     }
     .foot-cols {
