@@ -41,7 +41,7 @@ Resale also happens without anyone making a deliberately fraudulent decision. A 
 
 Every signal above is circumstantial because it relies on inference from your own results. To prove resale, you need a record whose entire contact history you control and can observe. That is the logic behind a seed lead, also called a [decoy lead or test lead](/blog/decoy-leads-seed-leads-test-leads/). It is essentially a [secret shopper for your leads](/blog/secret-shopper-for-sales-leads/): a believable fake you plant to see how the record is really handled.
 
-A seed lead is a believable identity you create: a real name, a working inbox, and a live phone number that answers calls and texts. You place it into the exact flow you want to audit, for example a batch of "exclusive" leads from a particular source. From that moment, every contact that identity receives is something you can see, because you built it and no real person is behind it.
+A seed lead is a believable identity you create: a real name, a working inbox, and a live phone number that receives calls and texts. You place it into the exact flow you want to audit, for example a batch of "exclusive" leads from a particular source. From that moment, every contact that identity receives is something you can see, because you built it and no real person is behind it.
 
 Here is why this is decisive. The seed was given to exactly one buyer or one source. You are the only party who is supposed to have it. So if a call, text, or email arrives from anyone other than the intended recipient, there is no innocent explanation. The record was passed on, shared, or sold. You are not inferring resale from a slow close rate. You are watching a second party contact a lead that only one party should have ever seen.
 

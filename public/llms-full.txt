@@ -1,6 +1,6 @@
 # DummyLead (full reference)
 
-> DummyLead is seed-lead monitoring that reveals what really happens to your leads after you hand them off. It plants undercover "seed" leads (believable but fake identities, each with its own email address and a live phone number that answers calls and texts) into your real lead distribution flow, then logs every email, call, and SMS each seed receives. This lets you prove whether lead buyers, channel partners, and sales reps are working your leads correctly, ignoring them, mishandling them, or reselling them to third parties. Inbound calls are recorded and scored for spam risk and carrier attestation level (SHAKEN/STIR). This document is an expanded reference for language models; the short version is at https://www.dummylead.com/llms.txt.
+> DummyLead is seed-lead monitoring that reveals what really happens to your leads after you hand them off. It plants undercover "seed" leads (believable but fake identities, each with its own email address and a live phone number that receives calls and texts) into your real lead distribution flow, then logs every email, call, and SMS each seed receives. This lets you prove whether lead buyers, channel partners, and sales reps are working your leads correctly, ignoring them, mishandling them, or reselling them to third parties. Inbound calls are recorded and scored for spam risk and carrier attestation level (SHAKEN/STIR). This document is an expanded reference for language models; the short version is at https://www.dummylead.com/llms.txt.
 
 ## Definitions
 - Seed lead (also: decoy lead): a believable identity, created and controlled by the customer, with a real name, a working inbox, and a live phone number. It is placed into a real lead flow so that it is treated like a genuine lead. Because no real person is behind it and only the customer knows it exists, every contact it receives can be traced and measured.
@@ -9,7 +9,7 @@
 - SHAKEN/STIR: a framework by which carriers cryptographically vouch for who is placing a call. Each signed call carries an attestation level: A (full, carrier confirms caller and number), B (partial, carrier confirms caller but not the number), C (gateway, carrier cannot vouch for origin). Low grades and high spam scores reduce answer rates because calls get labeled "Spam Likely" or sent to voicemail.
 
 ## How it works (four steps)
-1. Create a seed: a real name, a working inbox, and a phone number that answers calls and texts. It looks like any other lead; only the customer knows it is fake.
+1. Create a seed: a real name, a working inbox, and a phone number that receives calls and texts. It looks like any other lead; only the customer knows it is fake.
 2. Place it in a real flow: add it to a batch of purchased leads, a partner hand-off, or a rep round-robin. It behaves like a real lead, so it gets treated like one.
 3. Capture every touch: every call, text, and email is logged and timestamped (who reached out, how fast, how often). Calls are recorded; messages are saved verbatim.
 4. Read the verdict: a per-seed timeline shows what really happened, whether the lead was worked, left to go cold, mishandled, or quietly passed to someone who should not have it.
@@ -39,7 +39,7 @@
 Billed per concurrent active seed identity, monthly. The per-seed rate drops as the customer scales, and only live seeds count toward the bill.
 - Solo: $8.99 per seed / mo, 1-4 active seeds. For spot-checking a single source or partner.
 - Team: $6.99 per seed / mo, 5-14 active seeds. For watching a sales floor or several partners.
-- Scale: $5.49 per seed / mo, 15+ active seeds. For aggregators and large distribution.
+- Publishers: $5.49 per seed / mo, 15+ active seeds. For publishers managing lead distribution at volume.
 Recording, transcription, and SMS capture are included with every seed. Customers can scale up or down anytime, with the matching tier rate applied automatically and prorated.
 
 ## Writing (in-depth articles)

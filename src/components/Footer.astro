@@ -1,6 +1,6 @@
 ---
 import { SITE, NAV, CTA, LEGAL_NAV } from '../data/site';
-import Logo from './Logo.astro';
+import Brand from './Brand.astro';
 const year = 2026;
 ---
 
@@ -8,10 +8,7 @@ const year = 2026;
   <div class="shell">
     <div class="foot-main">
       <div class="foot-brand">
-        <a href="/" class="brand">
-          <Logo variant="white" size={34} />
-          <span class="brand-name">{SITE.name}</span>
-        </a>
+        <Brand inverse />
         <p class="foot-tag">{SITE.tagline}.</p>
         <a href={CTA.primary.href} class="btn btn-primary foot-cta">
           {CTA.primary.label}
@@ -46,7 +43,7 @@ const year = 2026;
 
     <div class="foot-bottom">
       <span class="foot-fine">© {year} {SITE.name}. All rights reserved.</span>
-      <span class="foot-fine foot-fine-mono">{SITE.domain}</span>
+      <span class="foot-fine foot-fine-domain">{SITE.domain}</span>
     </div>
   </div>
 </footer>
@@ -65,18 +62,6 @@ const year = 2026;
     gap: 44px;
     grid-template-columns: 1fr;
     padding-top: clamp(40px, 5vw, 56px);
-  }
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: #ffffff;
-  }
-  .brand-name {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
   }
   .foot-tag {
     color: #9fb0c2;
@@ -99,7 +84,7 @@ const year = 2026;
     gap: 12px;
   }
   .foot-col h4 {
-    font-family: var(--font-code);
+    font-family: var(--font-body);
     font-size: 0.66rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -123,7 +108,7 @@ const year = 2026;
     gap: 10px 22px;
   }
   .foot-legal a {
-    font-family: var(--font-code);
+    font-family: var(--font-body);
     font-size: 0.74rem;
     letter-spacing: 0.04em;
     color: #8aa0b6;
@@ -148,8 +133,8 @@ const year = 2026;
     font-size: 0.76rem;
     color: #6f8298;
   }
-  .foot-fine-mono {
-    font-family: var(--font-code);
+  .foot-fine-domain {
+    font-family: var(--font-body);
     letter-spacing: 0.04em;
   }
 

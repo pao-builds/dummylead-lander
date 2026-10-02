@@ -7,7 +7,7 @@ export type Step = {
   no: string;
   title: string;
   body: string;
-  // Mono "evidence" micro-line shown under each ledger cell.
+  // Small "evidence" micro-line shown under each ledger cell.
   captured: string;
 };
 
@@ -15,7 +15,7 @@ export const STEPS: Step[] = [
   {
     no: '01',
     title: 'Create a Dummy Lead',
-    body: 'A real name, a working inbox, and a phone number that answers calls and texts. It looks like any other lead. Only you know it’s fake.',
+    body: 'A real name, a working inbox, and a phone number that receives calls and texts. It looks like any other lead. Only you know it’s fake.',
     captured: 'identity · inbox · phone line',
   },
   {
@@ -26,14 +26,14 @@ export const STEPS: Step[] = [
   },
   {
     no: '03',
-    title: 'We catch every touch',
-    body: 'Every call, text, and email is logged and timestamped: who reached out, how fast, how often. Calls recorded, messages saved word for word.',
+    title: 'We keep track of every conversation',
+    body: 'Every call, text, and email is saved, so you can see who reached out, when, and how quickly they followed up. Calls are recorded, and messages are saved word for word.',
     captured: 'calls · texts · emails · timing',
   },
   {
     no: '04',
-    title: 'You read the verdict',
-    body: 'A clean timeline shows what really happened: worked, left to go cold, mishandled, or quietly passed to someone who shouldn’t have it.',
+    title: 'You see what happened',
+    body: 'See it all in one timeline: whether someone followed up, let the lead go cold, handled it poorly, or passed it to someone who shouldn’t have it.',
     captured: 'timeline · recordings · verdict',
   },
 ];
@@ -220,8 +220,8 @@ export const PRICING: { note: string; tiers: PriceTier[] } = {
       features: [],
     },
     {
-      name: 'Scale',
-      forWho: 'Aggregators and large distribution',
+      name: 'Publishers',
+      forWho: 'Managing lead distribution at volume',
       price: '$5.49',
       unit: 'per seed / mo',
       seeds: '15+ active seeds',
@@ -231,4 +231,3 @@ export const PRICING: { note: string; tiers: PriceTier[] } = {
     },
   ],
 };
-

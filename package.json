@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/check-no-mono.mjs",
     "build": "astro build",
+    "postbuild": "node scripts/check-no-mono.mjs dist",
+    "check:no-mono": "node scripts/check-no-mono.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

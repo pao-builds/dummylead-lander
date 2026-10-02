@@ -1,5 +1,6 @@
 ---
-import { SITE, NAV, CTA } from '../data/site';
+import Brand from './Brand.astro';
+import { NAV, CTA } from '../data/site';
 
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
@@ -13,17 +14,7 @@ const sectionOf = (href: string) =>
 
 <header class="site-header" data-header>
   <div class="shell header-row">
-    <a href="/" class="brand" aria-label={SITE.name}>
-      <img
-        src="/logo-horizontal.png"
-        alt={SITE.name}
-        class="brand-logo"
-        width="150"
-        height="29"
-        loading="eager"
-        decoding="async"
-      />
-    </a>
+    <div class="header-brand"><Brand /></div>
 
     <nav class="nav" aria-label="Primary">
       {
@@ -91,12 +82,12 @@ const sectionOf = (href: string) =>
   .header-row {
     display: flex;
     align-items: center;
-    gap: 24px;
-    height: 60px;
-    padding-inline: 10px 10px;
-    border-radius: 999px;
+    gap: 18px;
+    min-height: 76px;
+    padding: 12px 18px;
+    border-radius: 20px;
     border: 1px solid var(--color-line);
-    background: color-mix(in oklab, #f8f8fc 72%, transparent);
+    background: color-mix(in oklab, #ffffff 88%, transparent);
     backdrop-filter: blur(16px) saturate(150%);
     -webkit-backdrop-filter: blur(16px) saturate(150%);
     box-shadow: var(--shadow-sm);
@@ -111,27 +102,12 @@ const sectionOf = (href: string) =>
     padding-top: 8px;
   }
   .site-header.is-scrolled .header-row {
-    background: color-mix(in oklab, #f8f8fc 92%, transparent);
+    background: color-mix(in oklab, #ffffff 96%, transparent);
     border-color: var(--color-line-strong);
     box-shadow: var(--shadow);
   }
 
-  /* ---- brand ---- */
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    margin-right: auto;
-    padding-left: 6px;
-  }
-  .brand-logo {
-    display: block;
-    height: 29px;
-    width: auto;
-    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .brand:hover .brand-logo {
-    transform: translateY(-1px);
-  }
+  .header-brand { margin-right: auto; flex-shrink: 0; }
 
   /* ---- primary nav rail ---- */
   .nav {
@@ -160,7 +136,7 @@ const sectionOf = (href: string) =>
   /* "Soon" tag for not-yet-live nav items (e.g. Pricing) */
   .soon-badge {
     margin-left: 6px;
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
     font-size: 0.56rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -340,13 +316,13 @@ const sectionOf = (href: string) =>
   /* On mobile the island's own padding overrides .shell's page gutter, so
      it would otherwise sit flush against the screen edges. Inset the
      transparent header to float the pill with the same 14px gap as the top. */
-  @media (max-width: 899px) {
+  @media (max-width: 1099px) {
     .site-header {
       padding-inline: 14px;
     }
   }
 
-  @media (min-width: 900px) {
+  @media (min-width: 1100px) {
     .nav,
     .header-cta {
       display: flex;

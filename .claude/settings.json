@@ -8,6 +8,11 @@
             "type": "command",
             "statusMessage": "Checking for em dashes",
             "command": "jq -e '[.tool_input.content, .tool_input.new_string, (.tool_input.edits[]?.new_string)] | map(select(type==\"string\")) | add // \"\" | contains(\"\\u2014\")' >/dev/null 2>&1 && printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"This project bans em dashes (U+2014) in written content. Use a comma, colon, semicolon, parentheses, or a middot (U+00B7) instead.\"}}' || true"
+          },
+          {
+            "type": "command",
+            "statusMessage": "Checking for monospace fonts",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hook-no-mono.mjs\""
           }
         ]
       }

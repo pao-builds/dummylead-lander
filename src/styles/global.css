@@ -1,52 +1,49 @@
 @import 'tailwindcss';
 
-/* ============================================================
-   DummyLead design system  ·  "Sleuth Emerald"
-   Direction: Professional, credible SaaS. Clean, restrained, trustworthy.
-   Dark-green ink authority + emerald accent (matches the fedora logo).
-   Functional color story (mirrors the product):
-     signal/emerald = clean lead, worked correctly (brand accent)
-     amber          = suspicious activity
-     flag/rose      = confirmed misuse / reselling / spam
-     trust/teal     = call attestation / verified
-   ============================================================ */
+/* DummyLead · Next Call Club
+   Ocean-blue primary, sky accents, and neutral surfaces from @ncc/tokens.
+   Semantic warning and misuse colors remain distinct from brand accents. */
 
 @theme {
   /* ---- type ---- */
-  /* --font-hanken-grotesk / --font-inter are defined by Astro's <Font>
+  /* --font-poppins / --font-inter are defined by Astro's <Font>
      component (BaseLayout) and already resolve to the self-hosted face plus
      optimized fallback metrics; the trailing system fonts are a safety net. */
-  --font-display: var(--font-hanken-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  /* Label/data role: kept as a variable, shares the Inter body face. */
-  --font-mono: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  /* True monospace for console/evidence data readouts (rebuilt sections). */
-  --font-code: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  /* Fixed-width faces are banned in this repo (enforced by
+     scripts/check-no-mono.mjs). Unset Tailwind's default fixed-width stack and
+     its utility, and point preflight's code/kbd/samp/pre default at the body
+     face instead. */
+  --font-mono: initial;
+  --default-mono-font-family: var(--font-body);
 
   /* ---- surfaces (light) ---- */
   --color-ink: #ffffff; /* page bg & "on-accent" text (white on cobalt) */
-  --color-ink-2: #eef0fc; /* light wash */
+  --color-ink-2: hsl(198 68% 96%); /* light wash */
   --color-surface: #ffffff; /* card fill */
-  --color-surface-2: #f0f0fa; /* recessed/alt fill */
+  --color-surface-2: hsl(193 30% 97%); /* recessed/alt fill */
   --color-line: rgba(19, 26, 38, 0.1);
   --color-line-strong: rgba(19, 26, 38, 0.18);
 
-  /* ---- brand dark-green ink (footer / CTA band anchors) ---- */
-  --color-navy: #0b2018;
-  --color-navy-2: #07140f;
+  /* ---- brand ocean-blue ink (footer / CTA band anchors) ---- */
+  --color-navy: hsl(193 100% 14%);
+  --color-navy-2: hsl(193 100% 10%);
 
   /* ---- text ---- */
-  --color-bone: #1c1b2e; /* primary text (navy-charcoal) */
-  --color-bone-dim: #3a3650; /* secondary */
-  --color-muted: #5d5878; /* tertiary */
-  --color-faint: #989aae; /* faint labels */
+  --color-bone: hsl(210 25% 8%); /* primary text (navy-charcoal) */
+  --color-bone-dim: hsl(210 18% 28%); /* secondary */
+  --color-muted: hsl(210 14% 42%); /* tertiary */
+  --color-faint: hsl(210 10% 55%); /* faint labels */
 
-  /* ---- signal palette (Sleuth Emerald) ---- */
-  --color-signal: #059669; /* emerald: clean / brand accent (matches the logo) */
-  --color-signal-deep: #047857; /* deeper emerald: button fills (white text passes AA) */
+  /* ---- NCC blue palette ---- */
+  --color-signal: hsl(198 80% 30%); /* suite info blue: readable accent */
+  --color-signal-deep: hsl(193 100% 14%); /* suite primary: button fills */
   --color-amber: #d97706; /* suspicious */
   --color-flag: #e11d48; /* confirmed misuse */
-  --color-trust: #0d9488; /* attestation / verified (teal, distinct from brand emerald) */
+  --color-trust: #0d9488; /* attestation / verified (teal, distinct from brand blue) */
+
+  --color-sky: hsl(198 68% 66%); /* suite accent */
 
   /* ---- elevation ---- */
   --shadow-sm: 0 1px 2px rgba(19, 26, 38, 0.06), 0 1px 3px rgba(19, 26, 38, 0.05);
@@ -78,9 +75,9 @@ html {
   }
 }
 
-/* Anchored sections clear the sticky header (68px) when scrolled to. */
+/* Anchored sections clear the sticky header when scrolled to. */
 :where(section, article)[id] {
-  scroll-margin-top: 84px;
+  scroll-margin-top: 110px;
 }
 
 /* Lenis smooth scroll base styles. Only active once Lenis adds these classes
@@ -101,7 +98,7 @@ html.lenis body {
 }
 
 body {
-  background-color: #f8f8fc;
+  background-color: #fcfcfc;
   color: var(--color-bone);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -148,7 +145,7 @@ body::before {
   background:
     radial-gradient(
       1000px 620px at 86% -12%,
-      color-mix(in oklab, var(--color-signal) 12%, transparent),
+      color-mix(in oklab, var(--color-sky) 16%, transparent),
       transparent 60%
     ),
     radial-gradient(
@@ -156,7 +153,7 @@ body::before {
       color-mix(in oklab, var(--color-trust) 7%, transparent),
       transparent 55%
     ),
-    #f8f8fc;
+    #fcfcfc;
 }
 
 body::after {
@@ -228,7 +225,7 @@ body::after {
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -323,7 +320,7 @@ body::after {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.82rem;
   letter-spacing: 0.01em;
   padding: 0.85em 1.4em;
@@ -341,7 +338,7 @@ body::after {
   transform: translateY(-2px);
 }
 
-/* Filled CTA uses the deeper teal so white label text passes AA
+/* Filled CTA uses the suite primary blue so white label text passes AA
    (the brighter --color-signal fails contrast against white). */
 .btn-primary {
   background: var(--color-signal-deep);
@@ -392,7 +389,7 @@ body::after {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;

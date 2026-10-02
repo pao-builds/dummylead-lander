@@ -23,7 +23,7 @@ That is a real and painful problem, especially for companies distributing large 
 
 ## What DummyLead does
 
-DummyLead is a [secret shopper for your sales leads](/blog/secret-shopper-for-sales-leads/). Each Dummy Lead is a full working identity: a real name, a dedicated inbox, and a live phone number that answers calls and texts. You drop it into a lead flow (a buyer feed, a partner hand-off, or your own call rotation) and it gets treated like any other lead, because nobody handling it can tell it apart.
+DummyLead is a [secret shopper for your sales leads](/blog/secret-shopper-for-sales-leads/). Each Dummy Lead is a full working identity: a real name, a dedicated inbox, and a live phone number that receives calls and texts. You drop it into a lead flow (a buyer feed, a partner hand-off, or your own call rotation) and it gets treated like any other lead, because nobody handling it can tell it apart.
 
 Because the seed experiences everything a real prospect would, you get the whole picture, not just a resale alarm:
 

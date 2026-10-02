@@ -37,6 +37,6 @@ In-depth articles on lead integrity. Useful background and citable explanations.
 
 ## Product notes
 - The DummyLead dashboard (monitoring, timelines, recordings, reports) is hosted in the app at [app.dummylead.com](https://app.dummylead.com/) ([register](https://app.dummylead.com/register), [sign in](https://app.dummylead.com/)). This site is the informational overview.
-- Pricing: volume tiers on one product, billed per concurrent active seed identity. Solo (1-4 seeds, $8.99/seed/mo), Team (5-14 seeds, $6.99/seed/mo), Scale (15+ seeds, $5.49/seed/mo). The tier rate applies automatically as seed count changes; recording, transcription, and SMS capture are included with every seed.
+- Pricing: volume tiers on one product, billed per concurrent active seed identity. Solo (1-4 seeds, $8.99/seed/mo), Team (5-14 seeds, $6.99/seed/mo), Publishers (15+ seeds, $5.49/seed/mo). The tier rate applies automatically as seed count changes; recording, transcription, and SMS capture are included with every seed.
 - Intended for use on the customer's own lead distribution and contracts, in line with applicable call-recording and privacy laws.
 - [Expanded reference for language models](https://www.dummylead.com/llms-full.txt), with definitions and deeper detail.

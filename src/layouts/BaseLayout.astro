@@ -97,18 +97,16 @@ const structured = [organization, ...jsonLd];
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <meta name="theme-color" content="#0b2018" />
-    <!-- Icons: .ico is the path browsers auto-request (kills the /favicon.ico
-         404); the 512 PNG is the high-res primary; apple-touch is for iOS. -->
+    <meta name="theme-color" content="#003847" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" href="/favicon-512.png" type="image/png" sizes="512x512" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Fonts: Hanken Grotesk (display) + Inter (body & data labels).
+    <!-- Fonts: Poppins (display) + Inter (body & data labels).
          Self-hosted and optimized by Astro's Fonts API (see astro.config.mjs).
          `preload` emits a <link rel="preload"> for the woff2 so the browser
          fetches it early; @font-face uses `display: swap` by default. -->
-    <Font cssVariable="--font-hanken-grotesk" preload />
+    <Font cssVariable="--font-poppins" preload />
     <Font cssVariable="--font-inter" preload />
 
     <script

@@ -1,7 +1,7 @@
 /**
  * Generate raster favicon assets from public/favicon.svg.
  *
- * The SVG stays the primary, theme-adaptive icon. This script produces the
+ * The SVG stays the primary icon. This script produces the
  * fallbacks that browsers and platforms still ask for:
  *   - favicon.ico         (16/32/48, the path browsers auto-request)
  *   - favicon-32x32.png   (generic PNG fallback)
@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 const pub = fileURLToPath(new URL('../public/', import.meta.url));
 const svg = await readFile(pub + 'favicon.svg');
 
-// High render density keeps small sizes crisp (the viewBox is only 32 units).
+// High render density keeps small sizes crisp (the hat stays sharp at favicon sizes).
 const render = (size) =>
   sharp(svg, { density: 512 }).resize(size, size).png().toBuffer();
 
@@ -56,17 +56,19 @@ await writeFile(pub + 'favicon.ico', pngsToIco(icoImages));
 // Generic PNG fallback.
 await writeFile(pub + 'favicon-32x32.png', await render(32));
 
-// apple-touch-icon: owl centered on an opaque white tile with padding.
-const owl = await sharp(svg, { density: 512 })
+await writeFile(pub + 'favicon-512.png', await render(512));
+
+// apple-touch-icon: hat centered on an opaque white tile with padding.
+const hat = await sharp(svg, { density: 512 })
   .resize(150, 150)
   .png()
   .toBuffer();
 const appleTouch = await sharp({
   create: { width: 180, height: 180, channels: 4, background: '#ffffff' },
 })
-  .composite([{ input: owl, gravity: 'center' }])
+  .composite([{ input: hat, gravity: 'center' }])
   .png()
   .toBuffer();
 await writeFile(pub + 'apple-touch-icon.png', appleTouch);
 
-console.log('Wrote favicon.ico, favicon-32x32.png, apple-touch-icon.png');
+console.log('Wrote favicon.ico, favicon-32x32.png, favicon-512.png, apple-touch-icon.png');

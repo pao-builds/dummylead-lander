@@ -36,8 +36,8 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: 'Hanken Grotesk',
-      cssVariable: '--font-hanken-grotesk',
+      name: 'Poppins',
+      cssVariable: '--font-poppins',
       weights: [400, 500, 600, 700, 800],
       styles: ['normal'],
     },

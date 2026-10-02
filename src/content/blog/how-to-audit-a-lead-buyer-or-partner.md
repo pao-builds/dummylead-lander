@@ -27,7 +27,7 @@ A good audit answers concrete questions that aggregate numbers cannot:
 
 ## The seed-lead method
 
-The reliable way to observe all of this is a seed lead: a believable decoy identity you create and control, then route to the partner exactly as a real lead would arrive. It has a real name, a working inbox, and a phone number that answers calls and texts. To the partner it is indistinguishable from a genuine prospect. To you it is a fully instrumented observation point, because no real person sits behind it and every contact it receives is something you can see.
+The reliable way to observe all of this is a seed lead: a believable decoy identity you create and control, then route to the partner exactly as a real lead would arrive. It has a real name, a working inbox, and a phone number that receives calls and texts. To the partner it is indistinguishable from a genuine prospect. To you it is a fully instrumented observation point, because no real person sits behind it and every contact it receives is something you can see.
 
 Here is the step-by-step.
 

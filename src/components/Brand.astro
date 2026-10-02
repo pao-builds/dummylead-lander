@@ -1,0 +1,56 @@
+---
+interface Props { inverse?: boolean; }
+const { inverse = false } = Astro.props;
+---
+<a href="/" class:list={['dl-brand', { 'dl-brand-inverse': inverse }]} aria-label="DummyLead by Next Call Club">
+  <img class="dl-hat" src="/dummylead-hat.svg" width="40" height="24" alt="" aria-hidden="true" />
+  <span class="dl-wordmark" aria-hidden="true">Dummy<span>Lead</span></span>
+  <span class="dl-attribution">by Next Call Club</span>
+</a>
+<style>
+  .dl-brand {
+    display: inline-grid;
+    grid-template-columns: 40px auto;
+    grid-template-rows: 27px 16px;
+    column-gap: 6px;
+    row-gap: 3px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .dl-hat {
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    width: 40px;
+    height: 24px;
+    object-fit: contain;
+  }
+  .dl-wordmark {
+    grid-column: 2;
+    grid-row: 1;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 27px;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    color: var(--color-navy);
+  }
+  .dl-wordmark span { color: var(--color-signal); }
+  .dl-attribution {
+    grid-column: 2;
+    grid-row: 2;
+    display: block;
+    white-space: nowrap;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: .01em;
+    color: var(--color-muted);
+  }
+  .dl-brand-inverse .dl-hat { filter: brightness(0) invert(1); }
+  .dl-brand-inverse .dl-wordmark { color: #fff; }
+  .dl-brand-inverse .dl-wordmark span { color: var(--color-sky); }
+  .dl-brand-inverse .dl-attribution { color: #b7d3df; }
+</style>
