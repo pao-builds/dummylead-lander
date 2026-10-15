@@ -4,8 +4,8 @@ import FlankExhibit from './FlankExhibit.astro';
 
 /**
  * Caller-reputation exhibit: a phone playing three real-looking incoming
- * calls, centered between the check points (FlankExhibit.astro). Each point
- * lights up during the call it describes. Rendered inside the Use cases section
+ * calls, centered between static check points (FlankExhibit.astro).
+ * Rendered inside the Use cases section
  * (UseCases.astro) rather than as a section of its own.
  */
 const rep = USE_CASES.find((u) => u.slug === 'compliance')!;
@@ -38,6 +38,7 @@ const ico = {
 ---
 
 <FlankExhibit
+  staticPoints
   id="compliance"
   audience={rep.audience}
   title={rep.title}
@@ -433,15 +434,13 @@ const ico = {
 
 <script>
   import gsap from 'gsap';
-  import { flank } from '../scripts/flank';
 
   /**
    * Plays three incoming calls the way a real iPhone shows them: the screen
    * wakes, the phone vibrates in buzz/pause bursts, and the call is declined,
    * left to ring out, or answered (in-call screen with a running timer). On
-   * wide screens the points that call illustrates light up and their wires
-   * draw into the phone. Runs only while on screen; reduced-motion shows a
-   * single static frame with every point lit.
+   * screen the phone animation runs; the surrounding labels stay static.
+   * Reduced-motion shows a single static frame.
    */
   const stage = document.querySelector<HTMLElement>('#compliance [data-call]');
 
@@ -462,15 +461,12 @@ const ico = {
     const declineEl = el('[data-decline]');
     const acceptEl = el('[data-accept]');
     const endEl = el('[data-end]');
-    const pts = flank(stage.closest<HTMLElement>('[data-flank]')!);
 
     type Scene = {
       name: string;
       sub: string;
       brand: boolean;
       action: 'decline' | 'ignore' | 'answer';
-      /** indices into rep.points (content.ts) this call illustrates */
-      lit: number[];
     };
 
     // Problem first, then the in-between, then what good looks like.
@@ -480,21 +476,18 @@ const ico = {
         sub: '+1 (628) 555-0114',
         brand: false,
         action: 'decline',
-        lit: [0], // “Spam Likely” label
       },
       {
         name: '+1 (628) 555-0114',
         sub: 'San Francisco, CA',
         brand: false,
         action: 'ignore',
-        lit: [1, 3], // trust grade; rings out to voicemail
       },
       {
         name: 'Northwind Roofing',
         sub: '+1 (512) 555-0143',
         brand: true,
         action: 'answer',
-        lit: [2], // business name
       },
     ];
 
@@ -538,7 +531,6 @@ const ico = {
         tl.set(ui, { autoAlpha: 0 });
         tl.set(sleep, { autoAlpha: 1 });
         tl.to({}, { duration: 0.6 });
-        tl.call(pts.light, [s.lit]);
 
         // Screen wakes; the call sheet settles in from slightly enlarged.
         tl.to(sleep, { autoAlpha: 0, duration: 0.3, ease: 'power1.out' });
@@ -598,26 +590,15 @@ const ico = {
     if (reduce) {
       // Static, complete frame: the spam call, ringing, every point wired.
       render(scenes[0]);
-      pts.all();
     } else {
       render(scenes[0]);
       gsap.set(sleep, { autoAlpha: 1 });
       const tl = build();
       tl.pause();
 
-      // One-time entrance: points slide in from their side toward the phone,
-      // then the call loop starts.
-      let introduced = false;
-      const start = () => {
-        if (introduced) return tl.play();
-        introduced = true;
-        pts.enter(() => tl.play());
-      };
-
       if ('IntersectionObserver' in window) {
-        pts.arm();
         const io = new IntersectionObserver(
-          ([entry]) => (entry.isIntersecting ? start() : tl.pause()),
+          ([entry]) => (entry.isIntersecting ? tl.play() : tl.pause()),
           { threshold: 0.35 }
         );
         io.observe(device);

@@ -21,7 +21,7 @@ const LOG: { kind: keyof typeof icons; title: string; from: string; at: string; 
     title: 'Call',
     from: 'Apex Solar',
     at: '47 sec',
-    tags: [{ k: 'Caller ID', v: 'APEX SOLAR' }, { k: 'Carrier', v: 'Verizon' }, { v: 'Recorded 3:12' }],
+    tags: [{ v: 'Verizon' }, { v: 'Recorded 3:12' }],
   },
   {
     kind: 'text',
@@ -36,7 +36,7 @@ const LOG: { kind: keyof typeof icons; title: string; from: string; at: string; 
     title: 'Voicemail',
     from: 'Apex Solar',
     at: '2 hrs',
-    tags: [{ v: '0:38 saved' }, { v: 'Transcribed' }],
+    tags: [{ v: '0:38 · Transcribed' }],
   },
   {
     kind: 'alert',
@@ -44,7 +44,7 @@ const LOG: { kind: keyof typeof icons; title: string; from: string; at: string; 
     from: '(415) 555-0199',
     at: 'Next day',
     flag: true,
-    tags: [{ k: 'Caller ID', v: 'None shown' }, { k: 'Carrier', v: 'Bandwidth' }, { v: 'Not someone you sent it to', flag: true }],
+    tags: [{ v: 'Bandwidth' }, { v: 'Unexpected caller', flag: true }],
   },
 ];
 
@@ -70,6 +70,7 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
 
     <div class="cases" data-cases>
       <FlankExhibit
+        staticPoints
         id={lead.slug}
         audience={lead.audience}
         title={lead.title}
@@ -87,7 +88,7 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
               <span class="log-hat"><img src="/dummylead-hat.svg" alt="" width="40" height="22" /></span>
               <div>
                 <strong>Jane D.</strong>
-                <span>Dummy lead activity</span>
+                <span>Dummy lead</span>
               </div>
             </div>
 
@@ -100,7 +101,7 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
                     <div class="log-body">
                       <p class="log-title">
                         <span>
-                          <strong>{row.title}</strong> from {row.from}
+                          <strong>{row.title}</strong> · {row.from}
                         </span>
                         <time>{row.at}</time>
                       </p>
@@ -133,12 +134,17 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
     margin-top: clamp(24px, 3vw, 36px);
   }
 
-  /* ================= activity timeline (free-floating, no card) ================= */
+  /* ================= activity timeline card ================= */
   .log {
     position: relative;
     /* fixed (not min()) so the auto-width center column sizes to it */
-    width: 360px;
+    width: 408px;
     max-width: 100%;
+    padding: 24px;
+    border: 1px solid var(--color-line);
+    border-radius: 20px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-lg);
   }
   .log-sr {
     position: absolute;
@@ -154,6 +160,8 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
     align-items: center;
     gap: 12px;
     margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--color-line);
   }
   .log-hat {
     display: grid;
@@ -186,7 +194,7 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 22px;
   }
   .log-row {
     position: relative;
@@ -200,7 +208,7 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
     position: absolute;
     left: 17px;
     top: 38px;
-    bottom: -14px;
+    bottom: -20px;
     width: 2px;
     border-radius: 2px;
     background: var(--color-line-strong);
@@ -238,9 +246,10 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
   .log-title {
     margin: 0;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 10px;
-    font-size: 0.86rem;
+    gap: 4px 10px;
+    font-size: 0.9rem;
     color: var(--color-bone-dim);
     line-height: 1.35;
   }
@@ -250,12 +259,12 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
   }
   .log-title time {
     flex: none;
-    font-size: 0.74rem;
+    font-size: 0.78rem;
     color: var(--color-muted);
   }
   .log-quote {
     margin: 4px 0 0;
-    font-size: 0.82rem;
+    font-size: 0.86rem;
     color: var(--color-bone-dim);
   }
   .log-tags {
@@ -269,10 +278,10 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
     gap: 5px;
     padding: 3px 9px;
     border-radius: 999px;
-    font-size: 0.72rem;
+    font-size: 0.76rem;
     line-height: 1.4;
     color: var(--color-bone-dim);
-    background: var(--color-surface);
+    background: var(--color-surface-2);
     border: 1px solid var(--color-line);
   }
   .log-tag b {
@@ -286,86 +295,70 @@ const lead = USE_CASES.find((u) => u.slug === 'lead-buyers')!;
     border-color: color-mix(in oklab, var(--color-flag) 30%, var(--color-line));
   }
 
+  @media (max-width: 479px) {
+    .log {
+      padding: 18px;
+    }
+  }
+
 </style>
 
 <script>
   import gsap from 'gsap';
-  import { flank } from '../scripts/flank';
 
   /**
    * The activity log fills in like a live lead: each contact lands in turn,
    * its connector draws down to the next, and its detail tags (caller ID,
-   * carrier, recording) pop in. As each row lands, the side points it
-   * illustrates light up (FlankExhibit). The points slide in once on enter;
+   * carrier, recording) pop in. The side points stay fully visible and still;
    * the log loops only while on screen. Reduced-motion / no-JS shows the
    * finished log static with every point lit.
    */
   const ex = document.querySelector<HTMLElement>('#use-cases #lead-buyers');
   const log = ex?.querySelector<HTMLElement>('[data-log]');
 
-  // Which of lead.points (content.ts) each log row illustrates, in LOG order,
-  // then the points lit while the finished log holds.
-  const ROW_LIT = [
-    [0, 1], // call: timestamped, caller ID + carrier
-    [0, 2], // text at 4 min: how fast
-    [0, 2], // voicemail at 2 hrs: how often
-    [1, 3], // unknown number: caller ID, someone you didn't send it to
-  ];
-  const END_LIT = [4]; // the whole log is the record
+  if (ex && log && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const rows = gsap.utils.toArray<HTMLElement>('.log-row', log);
+    const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 0.6 });
 
-  if (ex && log) {
-    const pts = flank(ex);
+    tl.set(rows, { autoAlpha: 0, y: 10 });
+    tl.set(log.querySelectorAll('.log-conn'), { scaleY: 0 });
+    tl.set(log.querySelectorAll('.log-tag'), { autoAlpha: 0 });
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      pts.all();
-    } else {
-      const rows = gsap.utils.toArray<HTMLElement>('.log-row', log);
-      const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 0.6 });
-
-      tl.set(rows, { autoAlpha: 0, y: 10 });
-      tl.set(log.querySelectorAll('.log-conn'), { scaleY: 0 });
-      tl.set(log.querySelectorAll('.log-tag'), { autoAlpha: 0 });
-
-      rows.forEach((row, i) => {
-        const at = 0.3 + i * 1.4;
-        tl.call(pts.light, [ROW_LIT[i] ?? []], at);
-        tl.to(row, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, at);
+    rows.forEach((row, i) => {
+      const at = 0.3 + i * 1.4;
+      tl.to(row, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }, at);
+      tl.fromTo(
+        row.querySelector('.log-dot'),
+        { scale: 0.6 },
+        { scale: 1, duration: 0.45, ease: 'back.out(2.4)' },
+        at
+      );
+      const tags = row.querySelectorAll('.log-tag');
+      if (tags.length) {
         tl.fromTo(
-          row.querySelector('.log-dot'),
-          { scale: 0.6 },
-          { scale: 1, duration: 0.45, ease: 'back.out(2.4)' },
-          at
+          tags,
+          { autoAlpha: 0, scale: 0.85 },
+          { autoAlpha: 1, scale: 1, duration: 0.3, stagger: 0.09, ease: 'back.out(2)' },
+          at + 0.3
         );
-        const tags = row.querySelectorAll('.log-tag');
-        if (tags.length) {
-          tl.fromTo(
-            tags,
-            { autoAlpha: 0, scale: 0.85 },
-            { autoAlpha: 1, scale: 1, duration: 0.3, stagger: 0.09, ease: 'back.out(2)' },
-            at + 0.3
-          );
-        }
-        const conn = row.querySelector('.log-conn');
-        if (conn) tl.to(conn, { scaleY: 1, duration: 0.5, ease: 'power1.inOut' }, at + 0.55);
-      });
+      }
+      const conn = row.querySelector('.log-conn');
+      if (conn) tl.to(conn, { scaleY: 1, duration: 0.5, ease: 'power1.inOut' }, at + 0.55);
+    });
 
-      // Hold the finished log, then clear it for the next loop.
-      tl.call(pts.light, [END_LIT], '+=0.6');
-      tl.to({}, { duration: 2.6 });
-      tl.to(rows, { autoAlpha: 0, duration: 0.4 });
+    // Hold the finished log, then clear it for the next loop.
+    tl.to({}, { duration: 0.6 });
+    tl.to({}, { duration: 2.6 });
+    tl.to(rows, { autoAlpha: 0, duration: 0.4 });
 
-      let introduced = false;
+    if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) return tl.pause();
-          if (introduced) return tl.play();
-          introduced = true;
-          pts.enter(() => tl.play());
-        },
+        ([entry]) => (entry.isIntersecting ? tl.play() : tl.pause()),
         { threshold: 0.3 }
       );
-      pts.arm();
       io.observe(log);
+    } else {
+      tl.play();
     }
   }
 </script>

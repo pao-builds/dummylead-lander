@@ -76,7 +76,6 @@ const sectionOf = (href: string) =>
     top: 0;
     z-index: 40;
     padding-top: 14px;
-    transition: padding-top 0.3s ease;
   }
 
   .header-row {
@@ -97,11 +96,10 @@ const sectionOf = (href: string) =>
       box-shadow 0.3s ease,
       transform 0.3s ease;
   }
-  /* once scrolled, the island solidifies and lifts */
-  .site-header.is-scrolled {
-    padding-top: 8px;
-  }
+  /* Lift only the island: changing the sticky shell's height can trigger
+     scroll anchoring and repeatedly cross the scroll-state threshold. */
   .site-header.is-scrolled .header-row {
+    transform: translateY(-6px);
     background: color-mix(in oklab, #ffffff 96%, transparent);
     border-color: var(--color-line-strong);
     box-shadow: var(--shadow);
@@ -333,6 +331,9 @@ const sectionOf = (href: string) =>
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .header-row {
+      transition: none;
+    }
     .cta-ping::after {
       animation: none;
     }

@@ -17,8 +17,9 @@ interface Props {
   points: string[];
   tone: 'signal' | 'trust';
   divider?: boolean;
+  staticPoints?: boolean;
 }
-const { id, audience, title, problem, points, tone, divider = false } = Astro.props;
+const { id, audience, title, problem, points, tone, divider = false, staticPoints = false } = Astro.props;
 
 // First half on the left, the rest on the right.
 const half = Math.ceil(points.length / 2);
@@ -31,7 +32,7 @@ const check =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 ---
 
-<article id={id} class:list={['fx', `tone-${tone}`, { divider }]} data-flank>
+<article id={id} class:list={['fx', `tone-${tone}`, { divider, 'static-points': staticPoints }]} data-flank>
   <header class="fx-head">
     <span class="fx-aud">{audience}</span>
     <h3 class="fx-title">{title}</h3>
@@ -226,5 +227,6 @@ const check =
     }
     .fx-side-left .fx-wire-fill { transform-origin: left; }
     .fx-side-right .fx-wire-fill { transform-origin: right; }
+    .static-points .fx-wire-fill { transform: scaleX(1); }
   }
 </style>
