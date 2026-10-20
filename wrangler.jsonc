@@ -1,0 +1,9 @@
+{
+  // Explicit static hosting prevents Wrangler from auto-installing an SSR adapter.
+  "name": "dummylead",
+  "compatibility_date": "2026-10-20",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
